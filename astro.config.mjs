@@ -30,7 +30,7 @@ function customRehypeLazyLoadImage() {
 
 export default defineConfig({
   site: 'https://jidalii.github.io',
-  base: 'jidalii',
+  // base: 'jidalii',
   integrations: [sitemap(), tailwind(), solid(), expressiveCode({
     plugins: [pluginLineNumbers(), pluginCollapsibleSections()],
     themes: ["github-dark", "github-light"],

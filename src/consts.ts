@@ -16,13 +16,13 @@
  * beian {string} Chinese policy
  */
 export const site = {
-  title: 'Astro Theme Yi', // required
+  title: "Jida's Blog", // required
   favicon: '/favicon.svg', // required
-  description: 'Welcome to my independent blog website! ',
-  author: "Astro-Yi", // required
+  description: 'Welcome to my blog website! ',
+  author: "Jida-Li", // required
   avatar: '/avatar.png', // required
   url: 'https://xxxxxx.com', // required
-  motto: 'Actions speak louder than words.',
+  motto: 'Build a Better Decentralized World.',
   recentBlogSize: 5,
   archivePageSize: 25,
   postPageSize: 10,
@@ -100,31 +100,36 @@ export const categories = [
  * Personal link address
  */
 export const infoLinks = [
+  // {
+  //   icon: 'ri-telegram-fill',
+  //   name: 'telegram',
+  //   outlink: 'xxxxxxx',
+  // },
   {
-    icon: 'ri-telegram-fill',
-    name: 'telegram',
-    outlink: 'xxxxxxx',
+    icon: 'ri-linkedin-fill',
+    name: 'linkedin',
+    outlink: 'https://www.linkedin.com/in/jida-li/',
   },
   {
     icon: 'ri-twitter-fill',
     name: 'twitter',
-    outlink: 'xxxxxxx',
+    outlink: 'https://x.com/0xcocacolaL',
   },
   {
     icon: 'ri-instagram-fill',
     name: 'instagram',
-    outlink: 'xxxxxxx',
+    outlink: 'https://www.instagram.com/jida_leeeee/',
   },
   {
     icon: 'ri-github-fill',
     name: 'github',
-    outlink: 'xxxxxxx',
+    outlink: 'https://github.com/jidalii',
   },
-  {
-    icon: 'ri-rss-fill',
-    name: 'rss',
-    outlink: 'xxxxxxx',
-  }
+  // {
+  //   icon: 'ri-rss-fill',
+  //   name: 'rss',
+  //   outlink: 'xxxxxxx',
+  // }
 ]
 
 /**

@@ -7,9 +7,9 @@ tags: ["Web3", "DEX", "UniswapV3"]
 
 In this article, we would implement a smart contract for launch of liquidity pool between GAS (the native token of NeoX, if you are using chains like Ethereum the native token would be ETH), and ERC20 tokens.
 
-# Introduction
+# 1. Introduction
 
-## Structures
+## 1.1 Structures
 
 From the code perspective, v3 has a similar structure from v2
 
@@ -23,15 +23,15 @@ From the code perspective, v3 has a similar structure from v2
 - `SwapRouter`: provide the interface for token trade.
 - `NonfungiblePositionManager`: provide functionalities of adding/ removing/ modifying pool’s liquidity, and tokenize liquidity through NFT
 
-## V3 design
+## 1.2 V3 design
 
-### Virtual reserves
+### 1) Virtual reserves
 
 Instead of providing liquidity across the entire price range $$(0,\infty)$$ in v2, v3 allows LPs to concentrate their liquidity to smaller price ranges. A position only needs to maintain enough reserves to support trading within its range. From the perspective of a single liquidity pool, v3 acts like a liquidity aggregator.
 
 ![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/0ae117bc-b356-44c8-ada3-e1ff2a156acc/084d3fa4-393d-4f9b-a0db-c3c967a9e5c4/image.png)
 
-### Tick
+### 2) Tick
 
 - more about tick:
 
@@ -45,21 +45,21 @@ The price formula is:
 
 $$P_i=1.0001^{tick}$$
 
-### Transaction Fees
+### 3)  Transaction Fees
 
 In v1 and v2, each liquidity pool has a fixed transaction fee of 0.3%. However, the fee can be too high for pools of stable coins, and too low for pools of meme coins. Thus, v3 supports fee tiers at 0.01%, 0.05%, 0.5%, and 1%.
 
 ![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/0ae117bc-b356-44c8-ada3-e1ff2a156acc/ab395858-7325-469d-8121-e6c72d41efaa/image.png)
 
-# Implementations
+# 2. Implementations
 
 In the following example, we would create a smart contract for creating liquidity pools, adding liquidity, and collecting fees from the pools.
 
-## Get ready
+## 2.1 Get ready
 
 Before working on our smart contract, we would need to find the addresses for `UniswapV3Factory` and `NonfungiblePositionManager`. Since our contract would rely on these contracts. You can find the addresses for the blockchain you would be working with from this link: https://docs.uniswap.org/contracts/v3/reference/deployments/
 
-## Get started
+## 2.2 Get started
 
 - `WGAS`: since I would be deployed on NeoX, the native token would be `GAS`. If you would be deploying on Ethereum, you may change the `WGAS` address to the `WETH` address.
 - `_dexPoolFee`: the transaction fee. In our example, we set it at `10_000`( 1%). You can also set it at other supported values.
@@ -80,7 +80,7 @@ contract DexLauncher{
 }
 ```
 
-## Initialize
+## 2.3 Initialize
 
 ```solidity
 constructor(
@@ -100,9 +100,9 @@ constructor(
 }
 ```
 
-## Set tick
+## 2.4 Set tick
 
-### calculate `poolTick_`
+### 1) calculate `poolTick_`
 
 In order to calculate `poolTick_`, we would be using this formula: 
 
@@ -112,7 +112,7 @@ For example, you want to create a liquidity pool of GAS and USDT. And you want t
 
 $$\frac{3000}{1000}=1.0001^{tick}\\tick=\log_{1.0001}(\frac{3000}{1000})=10986$$
 
-### calculate `tickLower_` & `tickHigher_`
+### 2) calculate `tickLower_` & `tickHigher_`
 
 Ticks used for positions in upper and lower ranges must be evenly divisible by the tick spacing. We can calculate `tickSpacing` by `feeAmountTickSpacing(uint24 fee)` of `UniswapV3Factory`.
 
@@ -127,7 +127,7 @@ function setTick(int24 poolTick_, int24 tickLower_, int24 tickHigher_) external 
 }
 ```
 
-## Create pool
+## 3) Create pool
 
 <aside>
 🔴 **Ensure you compare token addresses!!!** The wrong ordering the token0 and token1 would lead to errors when minting liquidity.
@@ -158,7 +158,7 @@ function _createPool(address tk) internal returns (address pool_) {
 }
 ```
 
-## mint liquidity
+## 2.5 mint liquidity
 
 ```solidity
 /// @notice Calls the mint function in periphery of uniswap v3, and refunds the exceeding parts.
@@ -270,11 +270,11 @@ function _createDeposit(address owner, uint256 tokenId) internal {
 }
 ```
 
-# Full implementation
+# 3. Full implementation
 
 You can view the full implementation from this link: https://github.com/jidalii/uniswap-v3-playground
 
-# References
+# 4. References
 
 https://docs.uniswap.org/contracts/v3/guides/providing-liquidity/the-full-contract
 

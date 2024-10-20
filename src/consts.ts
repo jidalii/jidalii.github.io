@@ -21,7 +21,7 @@ export const site = {
   description: 'Welcome to my blog website! ',
   author: "Jida-Li", // required
   avatar: '/avatar.png', // required
-  url: 'https://xxxxxx.com', // required
+  url: 'https://jidalii.github.io', // required
   motto: 'Build a Better Decentralized World.',
   recentBlogSize: 5,
   archivePageSize: 25,

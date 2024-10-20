@@ -27,7 +27,7 @@ From the code perspective, v3 has a similar structure from v2
 
 ### Virtual reserves
 
-Instead of providing liquidity across the entire price range $(0,\infty)$ in v2, v3 allows LPs to concentrate their liquidity to smaller price ranges. A position only needs to maintain enough reserves to support trading within its range. From the perspective of a single liquidity pool, v3 acts like a liquidity aggregator.
+Instead of providing liquidity across the entire price range $$(0,\infty)$$ in v2, v3 allows LPs to concentrate their liquidity to smaller price ranges. A position only needs to maintain enough reserves to support trading within its range. From the perspective of a single liquidity pool, v3 acts like a liquidity aggregator.
 
 ![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/0ae117bc-b356-44c8-ada3-e1ff2a156acc/084d3fa4-393d-4f9b-a0db-c3c967a9e5c4/image.png)
 
@@ -37,13 +37,13 @@ Instead of providing liquidity across the entire price range $(0,\infty)$ in v2,
 
 A tick is a measure of the minimum upward or downward movement in the price of a security.
 
-`tick` is **a finite set of integer** in range of $[-887272, 887272]$. It represents prices at which the virtual liquidity of the contract can change. In v3, the space of possible prices is demarcated by discrete ticks to allow the implementation of custom liquidity provision.
+`tick` is **a finite set of integer** in range of $$[-887272, 887272]$$. It represents prices at which the virtual liquidity of the contract can change. In v3, the space of possible prices is demarcated by discrete ticks to allow the implementation of custom liquidity provision.
 
 In the implementation, you would need to provide `_tickLower` and `_tickUpper` to setup the price range of the liquidity.
 
 The price formula is:
 
-$P_i=1.0001^{tick}$
+$$P_i=1.0001^{tick}$$
 
 ### Transaction Fees
 
@@ -106,11 +106,11 @@ constructor(
 
 In order to calculate `poolTick_`, we would be using this formula: 
 
-$P_i=1.0001^{tick}$
+$$P_i=1.0001^{tick}$$
 
 For example, you want to create a liquidity pool of GAS and USDT. And you want to make the initial price to be 3 USDT/GAS. If you have 1,000 GAS for liquidity, you would need to provide 3,000 USDT according. Thus, `poolTick_` can be calculated by *(assume decimals of both tokens are the same)*:
 
-$\frac{3000}{1000}=1.0001^{tick}\\tick=\log_{1.0001}(\frac{3000}{1000})=10986$
+$$\frac{3000}{1000}=1.0001^{tick}\\tick=\log_{1.0001}(\frac{3000}{1000})=10986$$
 
 ### calculate `tickLower_` & `tickHigher_`
 

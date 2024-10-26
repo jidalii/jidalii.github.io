@@ -2,6 +2,7 @@
 title: "DHCP in Computer Network"
 description: ""
 date: 2024-10-26
+category: "Computer Network"
 tags: ["Computer Network", "DHCP", "Application Layer"]
 ---
 

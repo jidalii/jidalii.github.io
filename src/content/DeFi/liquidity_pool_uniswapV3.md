@@ -1,5 +1,5 @@
 ---
-title: "Launch Liquidity Pool on Uniswap V3 by Solidity"
+title: "UniswapV3: Launch Liquidity Pool in Solidity"
 description: "In this article, we would implement a smart contract for launch of liquidity pool between GAS (the native token of NeoX, if you are using chains like Ethereum the native token would be ETH), and ERC20 tokens."
 date: 2024-10-20
 category: "DeFi"

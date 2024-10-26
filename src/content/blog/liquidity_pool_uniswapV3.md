@@ -29,7 +29,7 @@ From the code perspective, v3 has a similar structure from v2
 
 Instead of providing liquidity across the entire price range $$(0,\infty)$$ in v2, v3 allows LPs to concentrate their liquidity to smaller price ranges. A position only needs to maintain enough reserves to support trading within its range. From the perspective of a single liquidity pool, v3 acts like a liquidity aggregator.
 
-![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/0ae117bc-b356-44c8-ada3-e1ff2a156acc/084d3fa4-393d-4f9b-a0db-c3c967a9e5c4/image.png)
+![image.png](/images/blog/liquidity_uniswapV3/reserve.png)
 
 ### 2) Tick
 

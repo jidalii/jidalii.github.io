@@ -1,9 +1,9 @@
 ---
-title: "DHCP in Computer Network"
-description: ""
+title: "Application Layer: DHCP"
+description: "An overview of DHCP"
 date: 2024-10-26
 category: "Computer Network"
-tags: ["Computer Network", "DHCP", "Application Layer"]
+tags: ["DHCP", "Application Layer"]
 ---
 
 ## Define
@@ -21,16 +21,12 @@ This allows devices to communicate on the network **without requiring manual con
 3. Subnet mask
 4. IP of the default gateway
 
-<aside>
-🟢
-
-DHCP uses UDP, instead of TCP.
-
-- DHCP communication is time-sensitive and not require the reliability mechanisms.
-- UTP is a **connectionless** protocol, making it faster for use in DHCP.
-- Using TCP would introduce unnecessary overhead.
-
-</aside>
+> 🟢 **NOTE**
+>  
+> DHCP uses UDP, instead of TCP.
+> - DHCP communication is time-sensitive and not require the reliability mechanisms.
+> - Using TCP would introduce unnecessary overhead.
+> - UTP is a **connectionless** protocol, making it faster for use in DHCP.
 
 ### special PIv4 address
 
@@ -63,12 +59,9 @@ DHCP uses UDP, instead of TCP.
 - dest:
     - `255.255.255.255:68`
 
-<aside>
-🟢
-
-The well-known port is reserved 
-
-</aside>
+> 🟢 **NOTE**
+> 
+> The well-known port is reserved.
 
 ### 3) DHCP request: client → server
 

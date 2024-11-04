@@ -1,5 +1,6 @@
 ---
 import IndexPage from "src/layouts/IndexPage.astro";
+import MainLayout from "src/layouts/MainLayout.astro";
 import {site} from "../../consts";
 import dayjs from "dayjs";
 import getPostsByYear from "src/utils/getPostsByYear";
@@ -15,7 +16,7 @@ let sortedPosts = sortPostsByDate(posts);
 sortedPosts = sortedPosts.splice(0, site.archivePageSize);
 let resultPosts = getPostsByYear(sortedPosts);
 ---
-
+<MainLayout>
 <IndexPage>
   {
     Object.keys(resultPosts)
@@ -40,3 +41,4 @@ let resultPosts = getPostsByYear(sortedPosts);
   }
   <Pagination currentPage={1} totalPage={totalPage} prefixUrl="/archive/"/>
 </IndexPage>
+</MainLayout>

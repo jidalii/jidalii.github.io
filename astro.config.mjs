@@ -1,23 +1,25 @@
-import {defineConfig} from 'astro/config';
+import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
+import partytown from '@astrojs/partytown'
 import expressiveCode from "astro-expressive-code";
 import remarkMermaid from 'remark-mermaidjs'
 import sitemap from '@astrojs/sitemap';
 import tailwind from '@astrojs/tailwind';
 import solid from '@astrojs/solid-js';
-import {remarkModifiedTime} from "./src/remarkPlugin/remark-modified-time.mjs";
-import {resetRemark} from "./src/remarkPlugin/reset-remark.js";
+import { remarkModifiedTime } from "./src/remarkPlugin/remark-modified-time.mjs";
+import { resetRemark } from "./src/remarkPlugin/reset-remark.js";
 import remarkDirective from "remark-directive";
-import {remarkAsides} from  './src/remarkPlugin/remark-asides.js'
-import {remarkCollapse} from "./src/remarkPlugin/remark-collapse.js";
+import { remarkAsides } from './src/remarkPlugin/remark-asides.js'
+import { remarkCollapse } from "./src/remarkPlugin/remark-collapse.js";
 import remarkMath from 'remark-math';
 import rehypeMathjax from 'rehype-mathjax';
 
 import expressiveCode from "astro-expressive-code";
-import {pluginLineNumbers} from '@expressive-code/plugin-line-numbers'
+import { pluginLineNumbers } from '@expressive-code/plugin-line-numbers'
 
-import {visit} from 'unist-util-visit'
-import {pluginCollapsibleSections} from '@expressive-code/plugin-collapsible-sections'
+import { visit } from 'unist-util-visit'
+import { pluginCollapsibleSections } from '@expressive-code/plugin-collapsible-sections'
+
 
 function customRehypeLazyLoadImage() {
   return function (tree) {
@@ -35,7 +37,11 @@ function customRehypeLazyLoadImage() {
 export default defineConfig({
   site: 'https://jidalii.github.io',
   // base: 'jidalii',
-  integrations: [sitemap(), tailwind(), solid(), expressiveCode({
+  integrations: [sitemap(), tailwind(), solid(), partytown({
+    config: {
+      forward: ["dataLayer.push"],
+    },
+  }), expressiveCode({
     plugins: [pluginLineNumbers(), pluginCollapsibleSections()],
     themes: ["github-dark", "github-light"],
     styleOverrides: {
@@ -45,7 +51,7 @@ export default defineConfig({
     themeCssSelector: (theme) => `[data-theme="${theme.type}"]`
   }), mdx()],
   markdown: {
-    remarkPlugins: [remarkMermaid, remarkMath, remarkModifiedTime, resetRemark, remarkDirective, remarkAsides({}),remarkCollapse({})],
+    remarkPlugins: [remarkMermaid, remarkMath, remarkModifiedTime, resetRemark, remarkDirective, remarkAsides({}), remarkCollapse({})],
     rehypePlugins: [rehypeMathjax, customRehypeLazyLoadImage],
   }
 });

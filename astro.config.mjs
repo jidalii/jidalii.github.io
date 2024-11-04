@@ -1,5 +1,7 @@
 import {defineConfig} from 'astro/config';
 import mdx from '@astrojs/mdx';
+import expressiveCode from "astro-expressive-code";
+import remarkMermaid from 'remark-mermaidjs'
 import sitemap from '@astrojs/sitemap';
 import tailwind from '@astrojs/tailwind';
 import solid from '@astrojs/solid-js';
@@ -43,7 +45,7 @@ export default defineConfig({
     themeCssSelector: (theme) => `[data-theme="${theme.type}"]`
   }), mdx()],
   markdown: {
-    remarkPlugins: [remarkMath, remarkModifiedTime, resetRemark, remarkDirective, remarkAsides({}),remarkCollapse({})],
+    remarkPlugins: [remarkMermaid, remarkMath, remarkModifiedTime, resetRemark, remarkDirective, remarkAsides({}),remarkCollapse({})],
     rehypePlugins: [rehypeMathjax, customRehypeLazyLoadImage],
   }
 });

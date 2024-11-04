@@ -16,9 +16,7 @@ export async function getStaticPaths({ paginate }) {
 const { page } = Astro.props;
 ---
 
-<MainLayout>
-  <IndexPage frontmatter={{ comment: false }}>
-    {page.data.map((blog, index) => <PostView blog={blog} />)}
-    <Pagination currentPage={page.currentPage} totalPage={page.lastPage} url={page.url} />
-  </IndexPage>
-</MainLayout>
+<IndexPage frontmatter={{ comment: false }}>
+  {page.data.map((blog, index) => <PostView blog={blog} />)}
+  <Pagination currentPage={page.currentPage} totalPage={page.lastPage} url={page.url} />
+</IndexPage>

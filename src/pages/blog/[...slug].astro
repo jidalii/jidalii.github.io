@@ -38,7 +38,6 @@ if (sortPosts[currentPostIndex + 1]) {
   nextPost = sortPosts[currentPostIndex + 1];
 }
 ---
-<MainLayout>
 <BlogPost frontmatter={entry.data}>
   <div>
     <PostTitle slug={`/blog/${entry.slug}`} {...entry.data} lastModified={lastModified} readingTime={readingTime}></PostTitle>
@@ -83,4 +82,3 @@ if (sortPosts[currentPostIndex + 1]) {
   </div>
 
 </BlogPost>
-</MainLayout>

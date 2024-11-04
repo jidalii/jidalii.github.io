@@ -7,6 +7,7 @@ import {getCollectionByName} from "../../utils/getCollectionByName";
 import {sortPostsByDate} from "../../utils/sortPostsByDate";
 import Donate from '../../components/Donate.astro'
 import {donate} from "../../consts";
+import MainLayout from "src/layouts/MainLayout.astro";
 
 export async function getStaticPaths() {
   const blogEntries = (await getCollection('blog')).filter(({data}) => {
@@ -37,6 +38,7 @@ if (sortPosts[currentPostIndex + 1]) {
   nextPost = sortPosts[currentPostIndex + 1];
 }
 ---
+<MainLayout>
 <BlogPost frontmatter={entry.data}>
   <div>
     <PostTitle slug={`/blog/${entry.slug}`} {...entry.data} lastModified={lastModified} readingTime={readingTime}></PostTitle>
@@ -81,3 +83,4 @@ if (sortPosts[currentPostIndex + 1]) {
   </div>
 
 </BlogPost>
+</MainLayout>

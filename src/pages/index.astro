@@ -1,6 +1,7 @@
 ---
 import PostView from '../components/PostView.astro'
 import IndexPage from '../layouts/IndexPage.astro'
+import MainLayout from "src/layouts/MainLayout.astro";
 import {getCollectionByName} from "../utils/getCollectionByName";
 import {orderBySticky} from "../utils/orderBySticky";
 import {site} from '../consts'
@@ -16,7 +17,7 @@ if (sortedPosts.length > site.postPageSize) {
   sortedPosts = sortedPosts.splice(0, site.postPageSize);
 }
 ---
-
+<MainLayout>
 <IndexPage>
   {
     sortedPosts.map(blog =>
@@ -31,4 +32,4 @@ if (sortedPosts.length > site.postPageSize) {
       /> : ''
   }
 </IndexPage>
-
+</MainLayout>

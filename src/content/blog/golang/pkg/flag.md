@@ -198,6 +198,8 @@ port: 1000
 port: 1000
 ```
 
+You might find the complete example of codes in this repo: [go-playground](https://github.com/jidalii/go-playground/tree/main/flag)
+
 # References
 
 1. https://pkg.go.dev/flag

@@ -3,7 +3,7 @@ title: "Golang Standard Package: flag"
 description: "An overview and usage of the stardard package flag in Go"
 date: 2024-11-18
 category: "Golang"
-tags: ["Standard Package", "CLI"]
+tags: ["Golang Standard Package", "CLI"]
 ---
 
 Package flag implements CLI flag parsing.

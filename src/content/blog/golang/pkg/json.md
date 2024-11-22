@@ -191,7 +191,7 @@ func ZeroValueConfusion() {
 // p2.Salary is nil
 ```
 
-### JSON tags
+### 5) JSON tags
 
 - **Confusion brought by default value:** default value or missing value
 

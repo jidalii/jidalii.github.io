@@ -1,6 +1,6 @@
 ---
 title: "Application Layer: DNS"
-description: "An overview of DNS"
+description: "An overview of DNS."
 date: 2024-10-26
 category: "Computer Network"
 tags: ["DNS", "Application Layer"]

@@ -1,6 +1,6 @@
 ---
 title: "Application Layer: DHCP"
-description: "An overview of DHCP"
+description: "An overview of DHCP."
 date: 2024-10-26
 category: "Computer Network"
 tags: ["DHCP", "Application Layer"]

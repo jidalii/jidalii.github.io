@@ -343,6 +343,8 @@ func MixedExample() {
 // ^CCancel signal received and stop monitoring
 ```
 
+To see the full example of code, you can visit: [goContext](https://github.com/jidalii/go-playground/blob/main/goContext/main.go)
+
 # References
 
 - https://pkg.go.dev/context

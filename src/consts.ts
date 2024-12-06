@@ -56,21 +56,21 @@ export const categories = [
     iconClass: "ri-draft-line",
     href: "/blog/1",
   },
-  {
-    name: "Feed",
-    iconClass: "ri-lightbulb-flash-line",
-    href: "/feed/1",
-  },
+  // {
+  //   name: "Feed",
+  //   iconClass: "ri-lightbulb-flash-line",
+  //   href: "/feed/1",
+  // },
   {
     name: "Archive",
     iconClass: "ri-archive-line",
     href: "/archive/1",
   },
-  {
-    name: "Message",
-    iconClass: "ri-chat-1-line",
-    href: "/message",
-  },
+  // {
+  //   name: "Message",
+  //   iconClass: "ri-chat-1-line",
+  //   href: "/message",
+  // },
   {
     name: "Search",
     iconClass: "ri-search-line",
@@ -86,12 +86,12 @@ export const categories = [
         iconClass: 'ri-information-line',
         href: '/about',
       },
-      {
-        name: 'Friends',
-        iconClass: 'ri-user-5-line',
-        href: '/friends',
-        target: '_self',
-      },
+      // {
+      //   name: 'Friends',
+      //   iconClass: 'ri-user-5-line',
+      //   href: '/friends',
+      //   target: '_self',
+      // },
     ]
   }
 ]

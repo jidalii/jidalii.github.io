@@ -6,7 +6,6 @@ import { getCollectionByName } from "../utils/getCollectionByName";
 import { orderBySticky } from "../utils/orderBySticky";
 import { site } from "../consts";
 import Pagination from "../components/Pagination.astro";
-import GoogleAnalytics from "../components/GoogleAnalytics.astro";
 import _ from "lodash";
 
 let currentPage = 1;
@@ -19,7 +18,6 @@ if (sortedPosts.length > site.postPageSize) {
 }
 ---
 
-<GoogleAnalytics />
 <IndexPage>
   {sortedPosts.map((blog) => <PostView blog={blog} />)}
   {totalPage > 1 ? <Pagination currentPage={currentPage} totalPage={totalPage} url={{ prev: "", next: "/blog/2" }} /> : ""}

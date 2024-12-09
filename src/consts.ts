@@ -80,7 +80,7 @@ export const categories = [
   {
     name: "C.V",
     iconClass: "ri-file-line",
-    href: "https://drive.google.com/file/d/1kADzkxYuSy8eBQb6BqxmslP77AZ0waqX/view?usp=sharing",
+    href: "/CV_Jida_Li.pdf",
   },
   {
     name: 'About',

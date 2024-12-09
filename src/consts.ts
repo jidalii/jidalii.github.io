@@ -61,11 +61,12 @@ export const categories = [
   //   iconClass: "ri-lightbulb-flash-line",
   //   href: "/feed/1",
   // },
-  {
-    name: "Archive",
-    iconClass: "ri-archive-line",
-    href: "/archive/1",
-  },
+  // {
+  //   name: "Archive",
+  //   iconClass: "ri-archive-line",
+  //   href: "/archive/1",
+  // },
+  
   // {
   //   name: "Message",
   //   iconClass: "ri-chat-1-line",
@@ -77,23 +78,33 @@ export const categories = [
     href: "/search",
   },
   {
-    name: "More",
-    iconClass: "ri-more-fill",
-    href: "javascript:void(0);",
-    children: [
-      {
-        name: 'About',
-        iconClass: 'ri-information-line',
-        href: '/about',
-      },
-      // {
-      //   name: 'Friends',
-      //   iconClass: 'ri-user-5-line',
-      //   href: '/friends',
-      //   target: '_self',
-      // },
-    ]
-  }
+    name: "C.V",
+    iconClass: "ri-file-line",
+    href: "https://drive.google.com/file/d/1kADzkxYuSy8eBQb6BqxmslP77AZ0waqX/view?usp=sharing",
+  },
+  {
+    name: 'About',
+    iconClass: 'ri-information-line',
+    href: '/about',
+  },
+  // {
+  //   name: "More",
+  //   iconClass: "ri-more-fill",
+  //   href: "javascript:void(0);",
+  //   children: [
+  //     {
+  //       name: 'About',
+  //       iconClass: 'ri-information-line',
+  //       href: '/about',
+  //     },
+  //     // {
+  //     //   name: 'Friends',
+  //     //   iconClass: 'ri-user-5-line',
+  //     //   href: '/friends',
+  //     //   target: '_self',
+  //     // },
+  //   ]
+  // }
 ]
 
 /**
@@ -126,9 +137,9 @@ export const infoLinks = [
     outlink: 'https://github.com/jidalii',
   },
   // {
-  //   icon: 'ri-rss-fill',
-  //   name: 'rss',
-  //   outlink: 'xxxxxxx',
+  //   icon: 'ri-file-fill',
+  //   name: 'resume',
+  //   outlink: 'https://drive.google.com/file/d/1kADzkxYuSy8eBQb6BqxmslP77AZ0waqX/view?usp=sharing',
   // }
 ]
 

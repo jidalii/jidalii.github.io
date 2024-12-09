@@ -3,8 +3,6 @@ donate: false
 comment: false
 ---
 
-## About Website
-Hello world!
+# About Me
 
-## About Me
-Welcome to my personal website! My name is Jida. I am currently a senior in CS at Boston University. And I am passionate about Web3 development, particularly Defi, and distributed systems. Over the years, I’ve cultivated skills in Golang, Solidity and have worked on various projects ranging from a distributed faucet for the NeoX testnet and a health DApp for better lifestyle.
+My name is Jida. I am currently a senior CS undergrad at Boston University. And I am passionate about blockchain and Web3, especially the DApp applications relavent to ZKP and DeFi. Here is the link to my CV: [link](https://drive.google.com/file/d/1kADzkxYuSy8eBQb6BqxmslP77AZ0waqX/view?usp=sharing).

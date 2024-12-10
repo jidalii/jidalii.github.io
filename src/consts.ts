@@ -78,7 +78,7 @@ export const categories = [
     href: "/search",
   },
   {
-    name: "C.V",
+    name: "C.V.",
     iconClass: "ri-file-line",
     href: "/CV_Jida_Li.pdf",
   },

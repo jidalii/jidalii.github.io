@@ -78,6 +78,11 @@ export const categories = [
     href: "/search",
   },
   {
+    name: "Class Note",
+    iconClass: "ri-school-line",
+    href: "/class_note",
+  },
+  {
     name: "C.V.",
     iconClass: "ri-file-line",
     href: "/CV_Jida_Li.pdf",

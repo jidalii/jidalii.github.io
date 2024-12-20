@@ -146,6 +146,103 @@ func SimpleRWMutex() {
 }
 ```
 
+# 2. `sync.WaitGroup`
+
+### intro
+
+In the previous examples, we use `time.Sleep` to “ensure” all the goroutines we fire terminate. However, this method is very time-consuming and inefficient. What’s worse, in a more complex scenario, like calling APIs, we cannot garauntee how much time it would take for all goroutines to get terminated. Some important operations may end before being settled.
+
+We can tackle the issue above using `WaitGroup`.
+
+### concepts
+
+- **Define:** A WaitGroup waits for a collection of goroutines to finish.
+- **How it works:**
+    1. The main goroutine, i.e. your main function, calls `WaitGroup.Add` to set the number of goroutines to wait for.
+    2. Each goroutines runs and calls `WaitGroup.Done` when finished.
+    3. At the same time, `WaitGroup.Wait` can be used to block until all goroutines have finished.
+
+<aside>
+🔴
+
+**Attention:** A `WaitGroup` **must not** be copied after first use.
+
+</aside>
+
+### methods
+
+Let’s dive into these methods:
+
+- `func (wg *WaitGroup) Add(delta int)`: Add `delta` to the `WaitGroup` counter, where `delta` typically represnets # of goroutines.
+    - If counter == 0, all goroutines blocked on `WaitGroup`.Wait are released.
+    - If counter < 0, Add panics.
+- `func (wg *WaitGroup) Done()`: Decrements the `WaitGroup` counter by 1.
+- `func (wg *WaitGroup) Wait()` : Wait blocks until the `WaitGroup` counter is 0.
+
+### example
+
+The following example find prime number in range of `start` and `end`:
+
+- We can create a `WaitGroup` by either:
+    - `wg := new(sync.WaitGroup)`
+    - `var wg sync.WaitGroup`
+
+```go
+func FindPrimeNumbersInRange(start, end int) {
+	// Create a WaitGroup
+	// wg := new(sync.WaitGroup)
+	var wg sync.WaitGroup
+	
+	// Add the number of goroutines to the WaitGroup
+	wg.Add(end - start + 1)
+
+	// Create a goroutine for each number
+	for i := start; i <= end; i++ {
+		go IsPrime(i, &wg)
+	}
+	
+	wg.Wait()  // <- Block here until all goroutines to finish
+}
+
+func IsPrime(n int, wg *sync.WaitGroup) bool {
+	// Defer Done to notify the WaitGroup when the task done
+	defer wg.Done()
+	
+	if n < 2 {
+		return false
+	}
+	for i := 2; i*i <= n; i++ {
+		if n%i == 0 {
+			return false
+		}
+	}
+	fmt.Println("Prime number:", n)
+	return true
+}
+```
+
+### attention when using `Add`
+
+1. **Positive vs. Negative Delta:** 
+    - **Positive Delta:** Increment the counter to indicate new tasks to wait for.
+    - **Negative Delta:** Decrement the counter to indicate completed tasks.
+        
+        ```go
+        // code snippet from waitgroup.go
+        // *Done is equivalent to Add(-1)*
+        func (wg *WaitGroup) Done() {
+        	wg.Add(-1)
+        }
+        ```
+        
+2. **Calling `Add` Before Starting a Goroutine:** call `Add` with a positive delta **must occur before  a Wait or creating a goroutines**.
+3. **Rules for reuage:** Ensure that all `Add` calls for the new set of tasks happen **after** the previous `Wait` call has completed → avoid overlapping usage of the counter.
+4. A `WaitGroup` **must not** be copied after first use → use the **pointer of `WaitGroup`** when passing it as a parameter to functions or methods.
+
+---
+
+To see the full example of code, you can visit: [goContext](https://github.com/jidalii/go-playground/blob/main/goContext/main.go)
+
 # References
 
 - https://pkg.go.dev/sync

@@ -1,7 +1,7 @@
 ---
 title: "Concurrency in Go (1): sync"
 description: "An overview and usage of sync package in Go."
-date: 2024-12-23
+date: 2024-12-19
 category: "Golang"
 tags: ["Golang Standard Package", "Concurrency"]
 ---

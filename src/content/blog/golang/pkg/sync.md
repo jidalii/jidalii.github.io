@@ -7,7 +7,7 @@ tags: ["Golang Standard Package", "Concurrency"]
 ---
 The `sync` library provides some basic synchronization primitives. The types in the `sync` library are mostly intended for low-level routine. Higher-level synchronization is better done via channels and communication.
 
-# **`sync.Mutex` & `sync.RWMutex`**
+# 1. **`sync.Mutex` & `sync.RWMutex`**
 
 ## What is mutex
 

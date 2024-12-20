@@ -241,7 +241,7 @@ func IsPrime(n int, wg *sync.WaitGroup) bool {
 
 ---
 
-To see the full example of code, you can visit: [goContext](https://github.com/jidalii/go-playground/blob/main/goContext/main.go)
+To see the full example of code, you can visit: [goContext](https://github.com/jidalii/go-playground/blob/main/goSync/main.go)
 
 # References
 

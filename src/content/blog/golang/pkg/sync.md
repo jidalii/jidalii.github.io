@@ -239,9 +239,178 @@ func IsPrime(n int, wg *sync.WaitGroup) bool {
 3. **Rules for reuage:** Ensure that all `Add` calls for the new set of tasks happen **after** the previous `Wait` call has completed → avoid overlapping usage of the counter.
 4. A `WaitGroup` **must not** be copied after first use → use the **pointer of `WaitGroup`** when passing it as a parameter to functions or methods.
 
+# 3. `sync.Once`
+
+### define
+
+`sync.Once` ensures a particular operation is execuetd ony once across multiple goroutines. It is useful for initializing shared resources, running setup code, or performing idempotent operations.
+
+It is particularly useful in Singleton Pattern
+
+### methods
+
+- **`func (o *Once) Do(f func())`**: calls the function if and only if Do is being called for **the first time** for this instance of `Once`. If many goroutines call simultaneously, only one will execute `f`, and others will wait until it completes.
+
+### example: Singleton Pattern
+
+```go
+type DB struct{}
+
+var db *DB
+var once sync.Once
+
+func GetDB() *DB {
+	once.Do(func() {
+		db = &DB{}
+		fmt.Println("db instance created.")
+	})
+	return db
+}
+
+func (d *DB) Query() {
+	fmt.Println("Querying the db.")
+}
+
+func SingletonOnce() {
+	var wg sync.WaitGroup
+	wg.Add(10)
+	for i := 0; i < 10; i++ {
+		go func() {
+			defer wg.Done()
+			GetDB().Query()
+		}()
+	}
+	wg.Wait()
+}
+```
+
+# 4. `sync.Map`
+
+[`sync.Map`](http://sync.Map) is the same as Map, except it is thread-safe. `sync.Map` has a lower performance to ensure concurrency control. In the scenario without concurrency, I would recommend using `Map`.
+
+# 5. `sync.Pool`
+
+### intro
+
+The idea behind `sync.Pool` is not related to the concurrency. It is more related to the issue of GC workload. In the case where a massive amount of objects were allocated repeatedly, it would cause a huge workload of GC. With `sync.Pool`, we can decrease the allocations and GC workload.
+
+### define
+
+A `Pool` is a set of temporary objects that may be individually saved and retrieved. It is thread-safe. 
+
+`Pool`'s purpose is to cache allocated but unused items for later reuse, relieving pressure on the garbage collector.
+
+### functions
+
+- **`func (p *Pool) Get() any`:**
+    1. Select an arbitrary item from the Pool.
+    2. Remove it from the Pool.
+    3. Return it to the caller.
+    
+    If multiple goroutines request objects at the same time and the pool is empty, the New function will be invoked multiple times to create new objects.
+    
+- **`func (p *Pool) Put(x any)`:** Add x to the pool.
+- **`New func() any`:** optionally specifies a function to generate a value when `Get` would otherwise return `nil`. It is customized when initializing `sync.Pool`:
+    
+    ```go
+    var slicePool = sync.Pool{
+    	New: func() interface{} {
+    		return make([]byte, 1024)
+    	},
+    }
+    ```
+    
+
+### use cases
+
+<aside>
+🟡
+
+In essence, used for **efficient management of short-lived, reusable objects** in concurrent environments
+
+</aside>
+
+It is typically used in scenarios where we need to allocate many temporary objects, such as buffers, large arrays, or other data structures. These objects may be expensive to allocate and destroy repeatedly, causing a high overhead to the GC.
+
+- **Summary of use case:**
+    1. **Objects are frequently allocated and deallocated**
+    2. **Objects are independent of each other:** don’t require explicit cleanup and can be reused directly.
+    3. **High concurrency**
+    4. **Allocation costs need to be amortized**
+
+### example
+
+The following example illustrates a case of managing reusable byte buffers in a concurrent web server:
+
+```go
+func PoolExample(workNum int) {
+	// Counter for new buffer creations
+    created := atomic.Int32{}
+
+	bufferPool := sync.Pool{
+		New: func() interface{} {
+			created.Add(1)
+			return new(bytes.Buffer)
+		},
+	}
+
+	worker := func(id int, wg *sync.WaitGroup) {
+		defer wg.Done()
+
+		// Get buffer from pool
+		buf := bufferPool.Get().(*bytes.Buffer)
+		defer bufferPool.Put(buf)
+		
+		// Actually use the buffer
+        buf.Reset()
+        fmt.Fprintf(buf, "Worker %d using buffer\n", id)
+        fmt.Print(buf.String())
+	}
+
+	wg := new(sync.WaitGroup)
+	for i := 0; i < workNum; i++ {
+		wg.Add(1)
+		// Simulate request pattern: between 0ms - 10ms
+		time.Sleep(time.Duration(rand.Intn(10))*time.Millisecond)
+		go worker(i, wg)
+	}
+	wg.Wait()
+
+	fmt.Printf("Created %d buffers\n", created.Load())
+}
+```
+
+# 6. `sync.Cond`
+
+### intro
+
+Cond implements a condition variable, a rendezvous point for goroutines waiting for or announcing the occurrence of an event. It enables one or more goroutines to wait until a specific condition is met before they continue execution.
+
+### methods
+
+- `func NewCond(l Locker) *Cond`: used for initialization. Return a new Cond with Locker `l`.
+- `func (c *Cond) Broadcast()`: wake all goroutines waiting on `c`.
+- `func (c *Cond) Signal()`: wake one goroutine waiting on `c`, if there is any.
+- `func (c *Cond) Wait()`: atomically unlocks `c.L` and suspends execution of the calling goroutine.
+    - **Steps:**
+        1. Unlock the associated lock.
+        2. Block the calling goroutine.
+        3. Resume execution when the waiting goroutine is signaled via `.Signal()` or `.Broadcast()`.
+
 ---
 
-To see the full example of code, you can visit: [goContext](https://github.com/jidalii/go-playground/blob/main/goSync/main.go)
+- `Broadcast()` vs. `Signal()`:
+
+| Method | How it works | Example |
+| --- | --- | --- |
+| `Signal()` | Only one goroutine needs to act on the event. | **Producer-Consumer**: Notify one consumer |
+| `Broadcast()` | All goroutines need to act on the event to re-evaluate their state. | **Pub/Sub:** Notify all subscribers |
+
+- Follow the link to see the examples of Producer-Consumer and Pub/Sub: [Link](https://github.com/jidalii/go-playground/blob/main/goSync/main.go#L361)
+  
+---
+
+To see the full example of code, you can visit: [goSync](https://github.com/jidalii/go-playground/blob/main/goSync/main.go).
 
 # References
 

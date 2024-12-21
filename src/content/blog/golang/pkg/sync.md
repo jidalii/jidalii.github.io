@@ -399,15 +399,83 @@ Cond implements a condition variable, a rendezvous point for goroutines waiting 
 
 ---
 
-- `Broadcast()` vs. `Signal()`:
+### example
+
+The following code is an example of `Signal()` for sequential, one-by-one goroutine processing. At any given time, only one goroutine is allowed to proceed with its task. Once it completes its work, it signals the next goroutine to continue.
+
+```go
+func CondSignalExample() {
+	mutex := sync.Mutex{}
+	c := sync.NewCond(&mutex)
+	wg := sync.WaitGroup{}
+
+	for i := 0; i < 5; i++ {
+		wg.Add(1)
+		go func(id int) {
+			defer wg.Done()
+			// Acquire lock before waiting
+			c.L.Lock()
+			fmt.Printf("Goroutine %d: waiting...\n", id)
+			// Release lock and wait for signal
+			c.Wait()
+
+			// After receiving signal, lock is reacquired
+			fmt.Printf("Goroutine %d: started at %s!\n",
+				id,
+				time.Now().Format("15:04:05.999"),
+			)
+			// Simulate work
+			time.Sleep(1 * time.Second)
+			c.L.Unlock()
+
+			// Signal next goroutine to proceed
+			c.Signal()
+		}(i)
+	}
+
+	time.Sleep(2 * time.Second)
+	// Signal first goroutine to start
+	c.Signal()
+	wg.Wait()
+}
+```
+
+The following code is an example of Broadcast() to notify multiple goroutines simultaneously. All goroutines initially wait for a signal to proceed. After a delay, the `Broadcast` call wakes up all waiting goroutines, allowing them to start their tasks concurrently.
+
+```go
+func CondBroadcastExample() {
+	mutex := sync.Mutex{}
+	c := sync.NewCond(&mutex)
+	wg := sync.WaitGroup{}
+
+	for i := 0; i < 5; i++ {
+		wg.Add(1)
+		go func(id int) {
+			defer wg.Done()
+			c.L.Lock()
+			fmt.Printf("Goroutine %d: waiting to start...\n", id)
+			c.Wait()
+			fmt.Printf("Goroutine %d: started!\n", id)
+			c.L.Unlock()
+		}(i)
+	}
+
+	time.Sleep(2 * time.Second)
+	c.Broadcast()
+	wg.Wait()
+}
+```
+
+---
+
+### `Broadcast()` vs. `Signal()`
 
 | Method | How it works | Example |
 | --- | --- | --- |
 | `Signal()` | Only one goroutine needs to act on the event. | **Producer-Consumer**: Notify one consumer |
 | `Broadcast()` | All goroutines need to act on the event to re-evaluate their state. | **Pub/Sub:** Notify all subscribers |
-
 - Follow the link to see the examples of Producer-Consumer and Pub/Sub: [Link](https://github.com/jidalii/go-playground/blob/main/goSync/main.go#L361)
-  
+
 ---
 
 To see the full example of code, you can visit: [goSync](https://github.com/jidalii/go-playground/blob/main/goSync/main.go).

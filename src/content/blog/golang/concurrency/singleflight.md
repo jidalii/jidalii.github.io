@@ -234,7 +234,7 @@ G3 received: Result for key1 (shared: false)
 
 ## Example of cache miss
 
-- The following is the benchmark test results of diagrams in the Intro section. You may view and run the code by cloning the repo:
+- The following is the benchmark test results of diagrams in the Intro section. You may view and run the code by cloning the repo: [Cache Miss Example](https://github.com/jidalii/go-playground/tree/main/goSingleflight/cache_miss).
 
 ```bash
 BenchmarkQueryUserSingleflight_1000-12 
@@ -409,6 +409,9 @@ func (g *Group) doCall(c *call, key string, fn func() (interface{}, error)) {
 3. Use DoChan for a more customized control, like timeout.
 4. Once the calling goroutine receives the value or the error, all the other waiting goroutines would also receive the value or the error.
 5. The `Group.Forget` method allows you to explicitly remove a key from the group’s internal mapping, so subsequent calls for the same key will not wait for the previous function to return.
+
+---
+To view the code in the example, you may go to: [https://github.com/jidalii/go-playground/tree/main/goSingleflight](https://github.com/jidalii/go-playground/tree/main/goSingleflight).
 
 # References
 

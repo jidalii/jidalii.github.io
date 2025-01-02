@@ -10,7 +10,7 @@ tags: ["Concurrency", "Cache Optimization", "singleflight"]
 
 When building a backend server with a database, adding a caching layer, such as Redis, is a common practice to prevent excessive database queries. However, in the case of cache miss storm where numerous requests simultaneously query the same expired key, the resulting cache miss can overwhelm the database with a surge of queries, potentially leading to performance degradation or timeouts.
 
-![image.png](/images/blog/golang/singleflight/image.png)
+![image.png](/images/blog/golang/singleflight/image1.png)
 
 To address this issue, `singleflight` package can be used to **combine multiple identical requests into one** within a short period, and thus, the database load can be reduced from N requests to just 1, improving the system’s robustness. It allows ***only one “in-flight” (on-going) operation*** for the same “key” at any given time.
 

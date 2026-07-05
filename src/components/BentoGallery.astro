@@ -3,18 +3,51 @@ const { photos: photoData } = Astro.props;
 const series = photoData[0]?.data?.series || [];
 const items = series.map(s => ({ image: s.cover, title: s.title })).slice(0, 6);
 const total = 12;
-const cells = [
-  ...items.map(p => ({ type: 'photo', image: p.image, title: p.title, alt: p.alt || p.title || '' })),
-  ...Array(total - 1 - items.length).fill({ type: 'empty' }),
-  { type: 'cta' },
+const NUM_COLS = 4, NUM_ROWS = 3;
+const ctaCell = { type: 'cta' as const };
+// CTA is explicitly placed at col 4, row 3 (0-indexed: col 3, row 2)
+const CTA_COL = 3, CTA_ROW = 2;
+
+// Build flat array: 11 auto-placed cells + CTA at end
+// Auto-flow fills: row0[0..3], row1[4..7], row2[8..10]; CTA at row2,col3
+const autoCells = [
+  ...items.map(p => ({ type: 'photo' as const, image: p.image, title: p.title, alt: p.alt || p.title || '' })),
+  ...Array(total - 1 - items.length).fill({ type: 'empty' as const }),
 ];
-// Shuffle all except the CTA (which is pinned to bottom-right)
-const cta = cells.pop();
-for (let i = cells.length - 1; i > 0; i--) {
-  const j = Math.floor(Math.random() * (i + 1));
-  [cells[i], cells[j]] = [cells[j], cells[i]];
+
+// Shuffle then fix coverage (keep shuffling until every row & col has ≥1 non-empty)
+function gridIndex(i: number): [number, number] {
+  return [Math.floor(i / NUM_COLS), i % NUM_COLS];
 }
-cells.push(cta);
+function hasCoverage(cells: typeof autoCells): boolean {
+  const rows = Array(NUM_ROWS).fill(false);
+  const cols = Array(NUM_COLS).fill(false);
+  for (let i = 0; i < cells.length; i++) {
+    if (cells[i].type !== 'empty') {
+      const [r, c] = gridIndex(i);
+      rows[r] = true;
+      cols[c] = true;
+    }
+  }
+  // CTA covers its position
+  rows[CTA_ROW] = true;
+  cols[CTA_COL] = true;
+  return rows.every(Boolean) && cols.every(Boolean);
+}
+function shuffle(arr: typeof autoCells) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+}
+// Shuffle until coverage is met (practically always within a few attempts)
+let attempts = 0;
+do {
+  shuffle(autoCells);
+  attempts++;
+} while (!hasCoverage(autoCells) && attempts < 200);
+
+const cells = [...autoCells, ctaCell];
 ---
 
 <div class="section-band band-warm">

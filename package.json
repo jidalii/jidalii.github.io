@@ -45,5 +45,8 @@
   },
   "devDependencies": {
     "sass": "^1.72.0"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": ["esbuild", "sharp", "vue-demi"]
   }
 }

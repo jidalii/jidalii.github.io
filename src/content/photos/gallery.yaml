@@ -2,8 +2,6 @@
 series:
   - title: "Panorama"
     cover: "/images/photos/panorama/1.jpg"
-    coverW: 5214
-    coverH: 2219
     photos:
       - "/images/photos/panorama/1.jpg"
       - "/images/photos/panorama/2.jpg"
@@ -15,16 +13,12 @@ series:
 
   - title: "Square"
     cover: "/images/photos/square/1.JPG"
-    coverW: 3080
-    coverH: 3080
     photos:
       - "/images/photos/square/1.JPG"
       - "/images/photos/square/2.JPG"
 
   - title: "日本東北と北海道 (Tōhoku & Hokkaido)"
     cover: "/images/photos/jp_2026/1.jpg"
-    coverW: 2965
-    coverH: 3950
     photos:
       - "/images/photos/jp_2026/1.jpg"
       - "/images/photos/jp_2026/2.jpg"
@@ -40,8 +34,6 @@ series:
 
   - title: "揚州 (Yangzhou)"
     cover: "/images/photos/yangzhou/1.JPG"
-    coverW: 5962
-    coverH: 2537
     photos:
       - "/images/photos/yangzhou/1.JPG"
       - "/images/photos/yangzhou/2.JPG"
@@ -54,8 +46,6 @@ series:
 
   - title: "雲南 (Yunnan)"
     cover: "/images/photos/yunnan/1.JPG"
-    coverW: 5764
-    coverH: 3843
     photos:
       - "/images/photos/yunnan/1.JPG"
       - "/images/photos/yunnan/2.JPG"

@@ -42,14 +42,14 @@ const nextPhoto = photos[nextIdx];
 ---
 
 <BaseLayout>
-  <div style={`background:${bgColor};position:fixed;inset:0;display:flex;align-items:center;justify-content:center;padding:120px 0 40px`}>
+  <div id="photo-bg" data-bg={bgColor} style={`background:${bgColor};position:fixed;inset:0;display:flex;align-items:center;justify-content:center;padding:120px 0 40px`}>
     <div class="photo-viewer">
       <button id="prev-btn" class="photo-arrow photo-arrow-left" aria-label="Previous" data-url={`/photos/${slugify(prevPhoto)}`} style={`color:${mutedColor};background:none;border:none;cursor:pointer`}>
         <span>←</span>
       </button>
 
       <div class="photo-main">
-        <img id="main-photo" src={currentPhoto} alt={series.title} />
+        <img id="main-photo" src={currentPhoto} alt={series.title} data-bg={bgColor} />
         <div class="photo-info">
           <span id="photo-title" class="photo-title" style={`color:${textColor}`}>{series.title}</span>
           <span id="photo-counter" class="photo-counter" style={`color:${mutedColor}`}>{photoIdx + 1} / {photos.length}</span>
@@ -76,23 +76,32 @@ const nextPhoto = photos[nextIdx];
     fetch(url).then(function(r){ return r.text() }).then(function(html) {
       var parser = new DOMParser();
       var doc = parser.parseFromString(html, 'text/html');
-      // Swap image
+      // Swap image + read new bg color from data-bg on the fetched img
       var newImg = doc.getElementById('main-photo');
-      if (newImg) { img.src = newImg.src; img.alt = newImg.alt; }
+      if (newImg) {
+        img.src = newImg.src;
+        img.alt = newImg.alt;
+        // Update background color
+        var newBg = newImg.getAttribute('data-bg');
+        if (newBg) {
+          var bgDiv = document.getElementById('photo-bg');
+          if (bgDiv) bgDiv.style.backgroundColor = newBg;
+          document.documentElement.style.setProperty('--color-bg', newBg);
+          document.documentElement.style.setProperty('--color-band-warm', newBg);
+        }
+      }
       // Swap title and counter
       var newTitle = doc.getElementById('photo-title');
       var newCounter = doc.getElementById('photo-counter');
       if (newTitle) document.getElementById('photo-title').textContent = newTitle.textContent;
       if (newCounter) document.getElementById('photo-counter').textContent = newCounter.textContent;
-      // Update button URLs from fetched page
+      // Update button URLs
       var newPrev = doc.getElementById('prev-btn');
       var newNext = doc.getElementById('next-btn');
       if (newPrev) document.getElementById('prev-btn').dataset.url = newPrev.dataset.url;
       if (newNext) document.getElementById('next-btn').dataset.url = newNext.dataset.url;
       // Update URL
       history.replaceState(null, '', url);
-      // Update background color from fetched page
-      var newBg = doc.querySelector('[style*="background"]');
       // Fade back
       img.onload = function() { img.style.opacity = '1'; };
       setTimeout(function() { img.style.opacity = '1'; }, 50);

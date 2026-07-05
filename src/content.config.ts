@@ -34,8 +34,6 @@ const photos = defineCollection({
     series: z.array(z.object({
       title: z.string(),
       cover: z.string(),
-      coverW: z.number().optional(),
-      coverH: z.number().optional(),
       photos: z.array(z.string()),
     })),
   }),

@@ -14,6 +14,7 @@ import remarkMath from 'remark-math';
 import rehypeMathjax from 'rehype-mathjax';
 import { pluginLineNumbers } from '@expressive-code/plugin-line-numbers'
 import { pluginCollapsibleSections } from '@expressive-code/plugin-collapsible-sections'
+import { unified } from '@astrojs/markdown-remark';
 import { visit } from 'unist-util-visit'
 
 function customRehypeLazyLoadImage() {
@@ -50,7 +51,9 @@ export default defineConfig({
     plugins: [tailwindcss()],
   },
   markdown: {
-    remarkPlugins: [remarkMermaid, remarkMath, remarkModifiedTime, resetRemark, remarkDirective],
-    rehypePlugins: [rehypeMathjax],
-  }
+    processor: unified({
+      remarkPlugins: [remarkMermaid, remarkMath, remarkModifiedTime, resetRemark, remarkDirective],
+      rehypePlugins: [rehypeMathjax],
+    }),
+  },
 });

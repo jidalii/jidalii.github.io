@@ -1,15 +1,15 @@
 ---
-import { getCollection } from 'astro:content';
+import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { sortPostsByDate } from '../../utils/sortPostsByDate';
 
 export async function getStaticPaths() {
   const entries = (await getCollection('blog')).filter(({data}) => import.meta.env.PROD ? !data.draft : true);
-  return entries.map(entry => ({ params: { slug: entry.slug }, props: { entry } }));
+  return entries.map(entry => ({ params: { slug: entry.id }, props: { entry } }));
 }
 
 const { entry } = Astro.props;
-const { Content, remarkPluginFrontmatter } = await entry.render();
+const { Content, remarkPluginFrontmatter } = await render(entry);
 const lastModified = remarkPluginFrontmatter.lastModified;
 const readingTime = remarkPluginFrontmatter.readingTime;
 
@@ -40,8 +40,8 @@ const nextPost = idx < sorted.length - 1 ? sorted[idx + 1] : null;
       </div>
       <div class="w-full" style="height:1px;background:var(--color-border);margin:60px 0 40px 0"></div>
       <nav class="flex justify-between text-sm">
-        {prevPost ? <a href={`/blog/${prevPost.slug}`} class="max-w-[45%] truncate" style="color:var(--color-text-secondary)">← {prevPost.data.title}</a> : <span></span>}
-        {nextPost ? <a href={`/blog/${nextPost.slug}`} class="max-w-[45%] truncate text-right" style="color:var(--color-text-secondary)">{nextPost.data.title} →</a> : <span></span>}
+        {prevPost ? <a href={`/blog/${prevPost.id}`} class="max-w-[45%] truncate" style="color:var(--color-text-secondary)">← {prevPost.data.title}</a> : <span></span>}
+        {nextPost ? <a href={`/blog/${nextPost.id}`} class="max-w-[45%] truncate text-right" style="color:var(--color-text-secondary)">{nextPost.data.title} →</a> : <span></span>}
       </nav>
     </article>
   </div>

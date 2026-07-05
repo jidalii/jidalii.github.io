@@ -125,9 +125,9 @@ const nextPhoto = photos[nextIdx];
   .photo-info { display: flex; align-items: center; gap: 16px; margin-top: 20px; }
   .photo-title { font-family: var(--font-display); font-size: 1.1rem; color: var(--color-text-primary); }
   .photo-counter { font-family: var(--font-mono); font-size: .75rem; color: var(--color-text-tertiary); }
-  .photo-arrow { display: flex; align-items: center; justify-content: center; width: 64px; height: 64px; border-radius: 50%; text-decoration: none; color: var(--color-text-secondary); font-size: 1.5rem; transition: color .2s, background .2s; flex-shrink: 0; }
+  .photo-arrow { position: fixed; top: 50%; transform: translateY(-50%); display: flex; align-items: center; justify-content: center; width: 64px; height: 64px; border-radius: 50%; text-decoration: none; font-size: 1.5rem; transition: color .2s, background .2s; flex-shrink: 0; z-index: 10; }
   .photo-arrow:hover { color: var(--color-accent-yellow) !important; background: color-mix(in srgb, var(--color-accent-yellow) 8%, transparent); }
-  .photo-arrow-left { margin-right: 24px; }
-  .photo-arrow-right { margin-left: 24px; }
-  @media(max-width:768px){ .photo-viewer { padding: 100px 16px; } .photo-arrow { width: 48px; height: 48px; font-size: 1.2rem; } .photo-arrow-left { margin-right: 8px; } .photo-arrow-right { margin-left: 8px; } .photo-main img { max-width: 85vw; max-height: 65vh; } }
+  .photo-arrow-left { left: 16px; }
+  .photo-arrow-right { right: 16px; }
+  @media(max-width:768px){ .photo-arrow { width: 48px; height: 48px; font-size: 1.2rem; } .photo-arrow-left { left: 8px; } .photo-arrow-right { right: 8px; } .photo-main img { max-width: 85vw; max-height: 65vh; } }
 </style>

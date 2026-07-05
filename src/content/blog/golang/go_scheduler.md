@@ -2,8 +2,8 @@
 title: "Goroutines and Go Scheduler"
 description: "This blog introduces you to how goroutines work and the Go's G-P-M model."
 date: 2025-01-10
-category: "Golang"
-tags: ["Goroutine", "Scheduler"]
+category: "golang"
+tags: ["go", "goroutine", "scheduler", "concurrency", "runtime"]
 ---
 
 # 0. Goroutine Scheduler

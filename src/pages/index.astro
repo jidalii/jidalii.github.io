@@ -1,24 +1,78 @@
 ---
-import PostView from "../components/PostView.astro";
-import IndexPage from "../layouts/IndexPage.astro";
-import MainLayout from "src/layouts/MainLayout.astro";
-import { getCollectionByName } from "../utils/getCollectionByName";
-import { orderBySticky } from "../utils/orderBySticky";
-import { site } from "../consts";
-import Pagination from "../components/Pagination.astro";
-import _ from "lodash";
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import BentoGallery from '../components/BentoGallery.astro';
+import GlyphMatrix from '../components/GlyphMatrix.astro';
+import { getCollection } from 'astro:content';
 
-let currentPage = 1;
-let blogs = await getCollectionByName("blog");
-let totalPage = _.ceil(_.divide(blogs.length, site.postPageSize));
-
-let sortedPosts = await orderBySticky(blogs);
-if (sortedPosts.length > site.postPageSize) {
-  sortedPosts = sortedPosts.splice(0, site.postPageSize);
-}
+const photoCollection = await getCollection('photos');
+const expData = await getCollection('experience');
+const jobs = (expData[0]?.data?.jobs || []).sort((a, b) => {
+  if (a.end === 'Present') return -1;
+  if (b.end === 'Present') return 1;
+  return b.start.localeCompare(a.start);
+});
 ---
 
-<IndexPage>
-  {sortedPosts.map((blog) => <PostView blog={blog} />)}
-  {totalPage > 1 ? <Pagination currentPage={currentPage} totalPage={totalPage} url={{ prev: "", next: "/blog/2" }} /> : ""}
-</IndexPage>
+<BaseLayout>
+  <div class="section-band band-warm" style="padding-top:140px;padding-bottom:60px">
+    <Hero />
+  </div>
+
+  <div class="band-dither dither-warm-cool">
+    <GlyphMatrix colorStart="#C4A04A" colorEnd="#8DA896" glyphs="01{}[]()/\\<>*+-=" cellSize={16} mutationRate={0.04} interval={80} fadeBottom={0.3} />
+  </div>
+
+  <div class="section-band band-cool" style="padding-top:60px">
+    <div class="accent-rule"></div>
+    <section class="section reveal">
+      <p class="section-label">Experience &amp; Education</p>
+      <h2 class="section-heading">Where I've worked</h2>
+      <p style="color:var(--color-text-secondary);max-width:540px;margin-top:-28px;margin-bottom:44px;font-size:.95rem">Building low-latency blockchain infrastructure, secure backend systems, and data pipelines across trading, research, and protocol environments.</p>
+      <div class="timeline">
+        {jobs.map(job => (
+          <div class="timeline-item">
+            <p class="timeline-date">{job.start} — {job.end}</p>
+            <p class="timeline-role">{job.role}</p>
+            <p class="timeline-company">{job.url ? <a href={job.url} target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--color-accent-blue)">{job.company}</a> : job.company} · {job.location}</p>
+            <ul class="timeline-desc">
+              {job.highlights.map(h => <li>{h}</li>)}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </section>
+  </div>
+
+  <div class="band-dither dither-cool-warm">
+    <GlyphMatrix colorStart="#7B94B0" colorEnd="#C4A04A" reverse glyphs="01{}[]()/\\<>*+-=" cellSize={16} mutationRate={0.04} interval={80} fadeBottom={0.3} />
+  </div>
+
+  <BentoGallery photos={photoCollection} />
+</BaseLayout>
+
+<style>
+  /* ═══ SECTION BANDS ═══ */
+  .section-band{position:relative;padding:80px 0}
+  .band-warm{background:var(--color-band-warm)}
+  .band-cool{background:var(--color-band-cool)}
+
+  /* ═══ GLYPH MATRIX TRANSITION ═══ */
+  .band-dither{
+    position:relative;width:100%;height:140px;overflow:hidden;
+    margin-top:-1px;margin-bottom:-1px;z-index:2;
+  }
+  .dither-warm-cool{background-color:var(--color-band-warm)}
+  .dither-cool-warm{background-color:var(--color-band-cool)}
+
+  /* ═══ EXPERIENCE TIMELINE ═══ */
+  .timeline{position:relative;padding-left:32px}
+  .timeline::before{content:'';position:absolute;left:0;top:4px;bottom:4px;width:1px;background:var(--color-border)}
+  .timeline-item{position:relative;padding-bottom:40px}
+  .timeline-item:last-child{padding-bottom:0}
+  .timeline-item::before{content:'';position:absolute;left:-36px;top:6px;width:10px;height:10px;border-radius:50%;background:var(--color-accent-yellow);box-shadow:0 0 0 4px color-mix(in srgb,var(--color-accent-yellow) 15%,transparent)}
+  .timeline-date{font-family:var(--font-mono);font-size:.7rem;color:var(--color-text-tertiary);margin-bottom:4px}
+  .timeline-role{font-family:var(--font-display);font-size:1.1rem;font-weight:500;color:var(--color-text-primary);margin-bottom:2px}
+  .timeline-company{font-size:.85rem;color:var(--color-text-secondary);margin-bottom:8px}
+  .timeline-desc{font-size:.82rem;color:var(--color-text-secondary);line-height:1.6;list-style:disc;padding-left:16px}
+</style>

@@ -26,4 +26,32 @@ const feed = defineCollection({
   })
 })
 
-export const collections = {blog, feed};
+const photos = defineCollection({
+  type: 'data',
+  schema: z.object({
+    series: z.array(z.object({
+      title: z.string(),
+      cover: z.string(),
+      coverW: z.number().optional(),
+      coverH: z.number().optional(),
+      photos: z.array(z.string()),
+    })),
+  }),
+});
+
+const experience = defineCollection({
+  type: 'data',
+  schema: z.object({
+    jobs: z.array(z.object({
+      company: z.string(),
+      role: z.string(),
+      location: z.string(),
+      start: z.string(),
+      end: z.string(),
+      highlights: z.array(z.string()),
+      url: z.string().optional(),
+    })),
+  }),
+});
+
+export const collections = {blog, feed, photos, experience};

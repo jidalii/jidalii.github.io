@@ -2,8 +2,8 @@
 title: "Golang Standard Package: encoding/json"
 description: "An overview and usage of the stardard package encoding/json in Go."
 date: 2024-11-21
-category: "Golang"
-tags: ["Golang Standard Package", "JSON"]
+category: "golang"
+tags: ["go", "json", "std"]
 ---
 
 # 1. Intro & How to use

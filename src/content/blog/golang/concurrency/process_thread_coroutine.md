@@ -2,8 +2,8 @@
 title: "WTF are process, thread, and coroutine"
 description: "Explain concepts of process, thread, and coroutine, and their relationship with goroutine."
 date: 2024-12-19
-category: "OS"
-tags: ["Concurrency", "Goroutine"]
+category: "systems"
+tags: ["os", "process", "thread", "coroutine", "goroutine", "concurrency"]
 ---
 
 # WTF are Coroutine, Thread, and Process

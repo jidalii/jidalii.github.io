@@ -2,8 +2,8 @@
 title: "Concurrency in Go (3): select"
 description: "This blog explores Go select statement - a super important building block in Go concurrency."
 date: 2024-12-25
-category: "Golang"
-tags: ["Concurrency", "Goroutine"]
+category: "golang"
+tags: ["go", "concurrency", "select", "channel"]
 ---
 
 ## Intro

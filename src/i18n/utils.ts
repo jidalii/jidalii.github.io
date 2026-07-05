@@ -1,20 +1,11 @@
 import {en} from './en'
-import {zhCn} from './zhCn'
-import {cs} from './cs'
-import {config} from "../consts";
 
-const ui = {
-  en,
-  'zh-cn':zhCn,
-  cs
-}
+const ui: Record<string, Record<string, string>> = { en }
 
-
-export function useTranslations(lang: keyof typeof ui) {
+export function useTranslations(lang: string) {
   return function t(key: string) {
-    return ui[lang][key] || ui[config.lang][key];
+    return ui[lang]?.[key] || ui['en']?.[key] || key;
   }
 }
 
-export const t = useTranslations(config.lang)
-
+export const t = useTranslations('en')

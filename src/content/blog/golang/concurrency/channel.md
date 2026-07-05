@@ -2,8 +2,8 @@
 title: "Concurrency in Go (2): channel"
 description: "This blog explores Go channels - a fundamental concurrency primitive that enables safe communication between goroutines, covering different channel types with examples."
 date: 2024-12-24
-category: "Golang"
-tags: ["Concurrency", "Goroutine"]
+category: "golang"
+tags: ["go", "concurrency", "channel", "goroutine"]
 ---
 
 # Intro

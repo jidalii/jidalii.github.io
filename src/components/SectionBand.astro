@@ -1,0 +1,7 @@
+---
+const { band = 'warm', padding } = Astro.props;
+---
+<div class="section-band band-{band}" style={padding ? `padding-top:${padding};padding-bottom:0` : ''}>
+  <div class="band-dither"></div>
+  <slot />
+</div>

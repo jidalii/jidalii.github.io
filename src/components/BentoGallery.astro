@@ -1,0 +1,86 @@
+---
+const { photos: photoData } = Astro.props;
+const series = photoData[0]?.data?.series || [];
+const items = series.map(s => ({ image: s.cover, title: s.title })).slice(0, 6);
+const total = 12;
+const cells = [
+  ...items.map(p => ({ type: 'photo', image: p.image, title: p.title, alt: p.alt || p.title || '' })),
+  ...Array(total - 1 - items.length).fill({ type: 'empty' }),
+  { type: 'cta' },
+];
+// Shuffle all except the CTA (which is pinned to bottom-right)
+const cta = cells.pop();
+for (let i = cells.length - 1; i > 0; i--) {
+  const j = Math.floor(Math.random() * (i + 1));
+  [cells[i], cells[j]] = [cells[j], cells[i]];
+}
+cells.push(cta);
+---
+
+<div class="section-band band-warm">
+  <div class="section reveal" style="padding-bottom:48px">
+    <p class="section-label">Gallery</p>
+    <h2 class="section-heading">Photos</h2>
+  </div>
+</div>
+<div class="bento-gallery" style="background:var(--color-band-warm)">
+  {cells.map(cell => {
+    if (cell.type === 'cta') return (
+      <div class="bento-gallery-item gallery-cta">
+        <a href="/photos" class="gallery-cta-link">
+          <span class="gallery-cta-label">Moments captured on Nikon Z 6₂</span>
+          <span class="gallery-cta-btn">View full gallery →</span>
+        </a>
+      </div>
+    );
+    if (cell.type === 'empty') return <div class="bento-gallery-item"></div>;
+    return (
+      <div class="bento-gallery-item">
+        <img src={cell.image} alt={cell.alt} loading="lazy" />
+        {cell.title && <span class="bento-gallery-caption">{cell.title}</span>}
+      </div>
+    );
+  })}
+</div>
+
+<style>
+  .bento-gallery{
+    display:grid;grid-template-columns:repeat(4,1fr);
+    grid-template-rows:repeat(3,1fr);
+    width:100vw;max-width:1400px;margin:0 auto;
+    gap:8px;padding:0 8px;
+    aspect-ratio:4/3;
+  }
+  .bento-gallery-item{
+    position:relative;overflow:hidden;background:transparent;border-radius:12px;
+    aspect-ratio:1/1;transition:background 2.4s cubic-bezier(0.16,1,0.3,1);
+  }
+  .gallery-cta{grid-column:4;grid-row:3;background:#9BAFAC}
+  .bento-gallery-item:not(.gallery-cta):hover{background:#d3ded2}
+  .bento-gallery-item:has(img):hover{background:transparent;transition:background 1s cubic-bezier(0.16,1,0.3,1)}
+  .bento-gallery-item img{
+    width:100%;height:100%;object-fit:cover;
+    transition:transform .6s var(--ease-out-expo);
+  }
+  .bento-gallery-item:hover img{transform:scale(1.04)}
+  .bento-gallery-caption{
+    position:absolute;bottom:0;left:0;right:0;padding:20px 24px;
+    background:linear-gradient(to top,rgba(0,0,0,.5),transparent);
+    color:#F0EDE7;font-size:.78rem;font-weight:500;
+    opacity:0;transform:translateY(8px);transition:opacity .3s,transform .3s;
+  }
+  .bento-gallery-item:hover .bento-gallery-caption{opacity:1;transform:translateY(0)}
+  .gallery-cta{display:flex;align-items:center;justify-content:center}
+  .gallery-cta-link{display:flex;flex-direction:column;align-items:center;gap:10px;text-decoration:none}
+  .gallery-cta-label{color:#F0EDE7;font-size:.82rem;font-weight:450}
+  .gallery-cta-btn{
+    display:inline-flex;align-items:center;gap:6px;padding:10px 22px;border-radius:12px;
+    background:#EFEFEA;color:#2A3A37;font-size:.8rem;font-weight:500;
+    transition:transform .2s,background .2s;
+  }
+  .gallery-cta-link:hover .gallery-cta-btn{background:#FFF;transform:translateY(-1px)}
+  @media(max-width:768px){
+    .bento-gallery{grid-template-columns:repeat(2,1fr);grid-template-rows:auto;aspect-ratio:auto}
+    .gallery-cta{grid-column:2;grid-row:auto}
+  }
+</style>

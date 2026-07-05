@@ -2,8 +2,8 @@
 title: "Concurrency in Go (4): singleflight"
 description: "This blog explores the singleflight library which optimizes concurrency, prevents cache miss storms, and improve server performance."
 date: 2025-01-01
-category: "Golang"
-tags: ["Concurrency", "Cache Optimization", "singleflight"]
+category: "golang"
+tags: ["go", "concurrency", "singleflight", "cache"]
 ---
 
 # Intro

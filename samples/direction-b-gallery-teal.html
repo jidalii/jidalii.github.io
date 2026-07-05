@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Direction B · Morandi Cool</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,400;1,8..60,500&family=Inter:wght@300;400;450;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/*
+  Direction B: Morandi Cool · 莫兰迪冷调
+  ─────────────────────────────────────
+  Philosophy (from Contralabs):
+  — Extreme restraint. Monochrome foundation, yellow ONLY for action.
+  — Semantic variables. Every color justifies its existence.
+  — System theme. No toggle — we follow the OS.
+  — Typography as structure. Source Serif 4 carries authority.
+  — Layering without borders. Subtle background shifts distinguish surfaces.
+
+  This direction: cool near-blacks with green-grey undertone,
+  ochre yellow as the sole warm element. Like a brass object
+  on a dark shelf.
+*/
+
+/* ═══════════════════════════════════════════
+   DESIGN TOKENS — Semantic, 8 variables only
+   ═══════════════════════════════════════════ */
+
+:root {
+  --color-bg-primary:    #F6F7F4;
+  --color-bg-secondary:  #EEF0EB;
+  --color-text-primary:  #111412;
+  --color-text-secondary:#656B63;
+  --color-text-tertiary: #969B93;
+  --color-accent:        #B8942E;
+  --color-accent-hover:  #9C7D22;
+  --color-border:        #E2E5DD;
+}
+
+/* Dark mode — system default, manual override via data-theme */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --color-bg-primary:    #111412;
+    --color-bg-secondary:  #191C19;
+    --color-text-primary:  #EDF0EB;
+    --color-text-secondary:#9BA097;
+    --color-text-tertiary: #6B7068;
+    --color-accent:        #C8A84E;
+    --color-accent-hover:  #D8BC62;
+    --color-border:        #272A25;
+  }
+}
+[data-theme="dark"] {
+  --color-bg-primary:    #111412;
+  --color-bg-secondary:  #191C19;
+  --color-text-primary:  #EDF0EB;
+  --color-text-secondary:#9BA097;
+  --color-text-tertiary: #6B7068;
+  --color-accent:        #C8A84E;
+  --color-accent-hover:  #D8BC62;
+  --color-border:        #272A25;
+}
+[data-theme="light"] {
+  --color-bg-primary:    #F6F7F4;
+  --color-bg-secondary:  #EEF0EB;
+  --color-text-primary:  #111412;
+  --color-text-secondary:#656B63;
+  --color-text-tertiary: #969B93;
+  --color-accent:        #B8942E;
+  --color-accent-hover:  #9C7D22;
+  --color-border:        #E2E5DD;
+}
+
+/* ═══════════════════════════════════════════
+   TYPE TOKENS
+   ═══════════════════════════════════════════ */
+
+:root {
+  --font-display: 'Source Serif 4', 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  --font-body:    'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono:    'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+  --max-reading:  680px;
+  --max-content:  1080px;
+}
+
+/* ═══════════════════════════════════════════
+   RESET
+   ═══════════════════════════════════════════ */
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+body{
+  font-family:var(--font-body);
+  background:var(--color-bg-primary);
+  color:var(--color-text-primary);
+  line-height:1.6;
+  transition:background .3s,color .3s;
+}
+
+/* ═══════════════════════════════════════════
+   TYPOGRAPHY HIERARCHY
+   ═══════════════════════════════════════════ */
+
+h1,h2,h3,h4{font-family:var(--font-display);font-weight:500;line-height:1.15;letter-spacing:-0.01em}
+h1{font-size:clamp(2.6rem,5.5vw,4.5rem)}
+h2{font-size:clamp(1.6rem,3vw,2.2rem)}
+h3{font-size:1.35rem}
+h4{font-size:1.1rem}
+p{color:var(--color-text-secondary);line-height:1.7}
+a{color:var(--color-accent);text-decoration:none;transition:color .2s}
+a:hover{color:var(--color-accent-hover)}
+small,.caption{font-size:.8rem;color:var(--color-text-tertiary)}
+
+/* ═══════════════════════════════════════════
+   NAVIGATION
+   ═══════════════════════════════════════════ */
+
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  background:color-mix(in srgb,var(--color-bg-primary) 90%,transparent);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+}
+.nav-inner{
+  max-width:var(--max-content);margin:0 auto;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 28px;height:60px;
+}
+.nav-logo{
+  font-family:var(--font-display);font-size:1.25rem;font-weight:500;
+  color:var(--color-text-primary);text-decoration:none;letter-spacing:.02em;
+}
+.nav-links{display:flex;gap:36px;align-items:center;list-style:none}
+.nav-links a{
+  color:var(--color-text-secondary);text-decoration:none;
+  font-size:.82rem;font-weight:450;letter-spacing:.02em;
+  transition:color .2s;
+}
+.nav-links a:hover{color:var(--color-text-primary)}
+.nav-links a.active{color:var(--color-accent)}
+.theme-toggle{
+  background:none;border:1px solid var(--color-border);border-radius:20px;
+  width:34px;height:34px;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  font-size:.9rem;color:var(--color-text-secondary);transition:all .2s;
+  line-height:1;
+}
+.theme-toggle:hover{border-color:var(--color-accent);color:var(--color-accent)}
+
+/* ═══════════════════════════════════════════
+   HERO
+   ═══════════════════════════════════════════ */
+
+.hero{
+  padding:160px 28px 100px;
+  max-width:var(--max-content);margin:0 auto;
+}
+.hero-eyebrow{
+  font-family:var(--font-mono);font-size:.68rem;font-weight:500;
+  color:var(--color-accent);letter-spacing:.14em;
+  text-transform:uppercase;margin-bottom:28px;
+}
+.hero h1{color:var(--color-text-primary);margin-bottom:0}
+.hero h1 em{font-style:italic;font-weight:400}
+.hero-subtitle{
+  font-size:1.1rem;color:var(--color-text-secondary);
+  max-width:540px;margin-top:28px;line-height:1.7;
+}
+.hero-accent-line{
+  width:32px;height:2px;background:var(--color-accent);
+  margin-top:40px;border-radius:1px;
+}
+
+/* ═══════════════════════════════════════════
+   SECTIONS
+   ═══════════════════════════════════════════ */
+
+.section{max-width:var(--max-content);margin:0 auto;padding:0 28px 100px}
+.section-label{
+  font-family:var(--font-mono);font-size:.65rem;font-weight:500;
+  color:var(--color-accent);letter-spacing:.14em;
+  text-transform:uppercase;margin-bottom:36px;
+}
+.section-heading{font-family:var(--font-display);font-size:clamp(1.6rem,3vw,2.2rem);font-weight:500;margin-bottom:44px;color:var(--color-text-primary)}
+
+/* ═══════════════════════════════════════════
+   BENTO — no borders, bg differentiation only
+   ═══════════════════════════════════════════ */
+
+.bento{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--color-border)}
+.bento-card{
+  background:var(--color-bg-secondary);padding:40px 36px;
+  transition:background .2s;
+}
+.bento-card:hover{background:color-mix(in srgb,var(--color-bg-secondary) 96%,var(--color-accent))}
+.bento-card-label{font-family:var(--font-mono);font-size:.62rem;font-weight:500;color:var(--color-accent);letter-spacing:.12em;text-transform:uppercase;margin-bottom:16px}
+.bento-card h3{font-size:1.4rem;margin-bottom:10px;color:var(--color-text-primary)}
+.bento-card p{font-size:.88rem;margin-bottom:24px}
+.bento-card a{font-size:.82rem;font-weight:500;display:inline-flex;align-items:center;gap:4px;transition:gap .2s}
+.bento-card a:hover{gap:8px}
+
+.photo-placeholder{
+  width:100%;aspect-ratio:16/10;
+  background:linear-gradient(135deg, #2D322B 0%, #383D36 40%, #2A2F28 100%);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-display);font-size:1rem;color:var(--color-text-tertiary);font-style:italic;
+}
+
+/* ═══════════════════════════════════════════
+   BLOG LIST
+   ═══════════════════════════════════════════ */
+
+.blog-list{display:flex;flex-direction:column}
+.blog-item{
+  display:grid;grid-template-columns:100px 1fr 80px;align-items:baseline;gap:24px;
+  padding:26px 0;border-bottom:1px solid var(--color-border);
+  text-decoration:none;color:inherit;transition:padding-left .2s;
+}
+.blog-item:hover{padding-left:8px}
+.blog-item-date{font-family:var(--font-mono);font-size:.72rem;color:var(--color-text-tertiary);font-weight:500}
+.blog-item-content h4{font-family:var(--font-display);font-size:1.15rem;font-weight:500;color:var(--color-text-primary);margin-bottom:4px}
+.blog-item-content p{font-size:.82rem;color:var(--color-text-secondary);line-height:1.5}
+.blog-item-meta{font-family:var(--font-mono);font-size:.7rem;color:var(--color-text-tertiary);text-align:right}
+
+/* ═══════════════════════════════════════════
+   CODE BLOCK
+   ═══════════════════════════════════════════ */
+
+.code-block{
+  border-radius:4px;overflow:hidden;
+  background:#0B0D0B;
+}
+[data-theme="light"] .code-block{background:#1C1E1B}
+@media (prefers-color-scheme: light){
+  :root:not([data-theme="dark"]) .code-block{background:#1C1E1B}
+}
+.code-header{padding:12px 20px;background:rgba(255,255,255,.02);display:flex;gap:8px}
+.code-dot{width:10px;height:10px;border-radius:50%}
+.code-dot:nth-child(1){background:#E8877A}.code-dot:nth-child(2){background:#DBBF6E}.code-dot:nth-child(3){background:#8BA87D}
+.code-block pre{
+  padding:28px 24px;margin:0;overflow-x:auto;
+  font-family:var(--font-mono);font-size:.78rem;line-height:1.75;
+  color:#E2E5DB;
+}
+.c-kw{color:#C8A84E}.c-str{color:#9CAD8A}.c-fn{color:#D4B87A}.c-cm{color:#6B7068}
+
+/* ═══════════════════════════════════════════
+   PHOTO GRID
+   ═══════════════════════════════════════════ */
+
+.photo-grid{display:grid;grid-template-columns:2fr 1fr 1.5fr;gap:1px;background:var(--color-border)}
+.photo-grid-item{
+  background:linear-gradient(135deg, #2D322B, #383D36, #2A2F28);
+  aspect-ratio:var(--ar,3/2);transition:opacity .3s;
+}
+.photo-grid-item:hover{opacity:.85}
+.photo-grid-item:nth-child(1){grid-row:span 2;--ar:2/3}
+.photo-grid-item:nth-child(2){--ar:16/9}
+.photo-grid-item:nth-child(3){--ar:1/1}
+.photo-grid-item:nth-child(4){--ar:16/10}
+.photo-grid-item:nth-child(5){--ar:3/4}
+
+/* ═══════════════════════════════════════════
+   ABOUT / EXPERIENCE TIMELINE
+   ═══════════════════════════════════════════ */
+
+.timeline{position:relative;padding-left:32px}
+.timeline::before{
+  content:'';position:absolute;left:0;top:4px;bottom:4px;
+  width:1px;background:var(--color-border);
+}
+.timeline-item{position:relative;padding-bottom:40px}
+.timeline-item:last-child{padding-bottom:0}
+.timeline-item::before{
+  content:'';position:absolute;left:-35px;top:6px;
+  width:8px;height:8px;border-radius:50%;
+  background:var(--color-accent);
+}
+.timeline-date{font-family:var(--font-mono);font-size:.7rem;color:var(--color-text-tertiary);margin-bottom:4px}
+.timeline-role{font-family:var(--font-display);font-size:1.1rem;font-weight:500;color:var(--color-text-primary);margin-bottom:2px}
+.timeline-company{font-size:.85rem;color:var(--color-text-secondary);margin-bottom:8px}
+.timeline-desc{font-size:.82rem;color:var(--color-text-secondary);line-height:1.6}
+
+/* ═══════════════════════════════════════════
+   FOOTER
+   ═══════════════════════════════════════════ */
+
+footer{
+  max-width:var(--max-content);margin:0 auto;
+  padding:60px 28px 48px;
+  border-top:1px solid var(--color-border);
+  display:flex;justify-content:space-between;align-items:center;
+}
+.footer-text{font-size:.78rem;color:var(--color-text-tertiary)}
+.footer-links{display:flex;gap:24px;list-style:none}
+.footer-links a{font-size:.78rem;color:var(--color-text-tertiary);transition:color .2s}
+.footer-links a:hover{color:var(--color-text-primary)}
+
+/* ═══════════════════════════════════════════
+   CTA BUTTON
+   ═══════════════════════════════════════════ */
+
+.btn{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:12px 24px;border-radius:4px;
+  font-family:var(--font-body);font-size:.82rem;font-weight:500;
+  background:var(--color-accent);color:var(--color-bg-primary);
+  border:none;cursor:pointer;text-decoration:none;
+  transition:background .2s,transform .15s;
+}
+.btn:hover{background:var(--color-accent-hover);color:var(--color-bg-primary);transform:translateY(-1px)}
+
+/* ═══════════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════════ */
+
+@media(max-width:768px){
+  .hero{padding:128px 20px 80px}
+  .section{padding:0 20px 72px}
+  .bento{grid-template-columns:1fr}
+  .blog-item{grid-template-columns:1fr;gap:4px}
+  .blog-item-date{order:-1}
+  .blog-item-meta{text-align:left}
+  .photo-grid{grid-template-columns:1fr 1fr}
+  .nav-links{gap:20px}
+  .nav-links a{font-size:.76rem}
+  .bento-card{padding:28px 24px}
+  footer{flex-direction:column;gap:16px;text-align:center}
+}
+
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{transition:none!important;animation:none!important}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">Jida Li</a>
+    <ul class="nav-links">
+      <li><a href="/blog">Blog</a></li>
+      <li><a href="/photos" class="active">Photos</a></li>
+      <li><a href="/about">About</a></li>
+      <li><button class="theme-toggle" onclick="cycleTheme()" aria-label="Toggle color scheme" title="System → Light → Dark">◐</button></li>
+    </ul>
+  </div>
+</nav>
+
+<main>
+
+  <!-- ═══ HERO ═══ -->
+  <section class="hero">
+    <p class="hero-eyebrow">Developer &amp; Photographer</p>
+    <h1>Building a <em>better</em><br>decentralized world.</h1>
+    <p class="hero-subtitle">
+      Backend engineer by trade, photographer by instinct. I write about distributed systems,
+      blockchain infrastructure, and the craft of writing code that moves money safely.
+    </p>
+    <div class="hero-accent-line"></div>
+  </section>
+
+  <!-- ═══ FEATURED ═══ -->
+  <section class="section">
+    <p class="section-label">Featured</p>
+    <div class="bento">
+      <div class="bento-card">
+        <p class="bento-card-label">Latest Article</p>
+        <h3>Concurrency in Go: singleflight</h3>
+        <p>Deduplicating concurrent requests. How to prevent thundering herd problems with Go's singleflight package.</p>
+        <a href="#">Read article →</a>
+      </div>
+      <div class="bento-card">
+        <p class="bento-card-label">From the Gallery</p>
+        <div class="photo-placeholder">Shanghai, 2026</div>
+        <p style="margin-top:16px">A selection of moments captured on Nikon Z 6₂.</p>
+        <a href="#">View gallery →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ BLOG ═══ -->
+  <section class="section">
+    <p class="section-label">Recent Writing</p>
+    <h2 class="section-heading">Blog</h2>
+    <div class="blog-list">
+      <a href="#" class="blog-item">
+        <span class="blog-item-date">2025.12</span>
+        <span class="blog-item-content">
+          <h4>Everything You Need to Know About Locks</h4>
+          <p>Mutex, spinlock, RWLock — a comprehensive guide to synchronization primitives.</p>
+        </span>
+        <span class="blog-item-meta">8 min</span>
+      </a>
+      <a href="#" class="blog-item">
+        <span class="blog-item-date">2025.11</span>
+        <span class="blog-item-content">
+          <h4>Solana: Account Models</h4>
+          <p>Understanding Solana's account-based architecture and how it differs from Ethereum.</p>
+        </span>
+        <span class="blog-item-meta">12 min</span>
+      </a>
+      <a href="#" class="blog-item">
+        <span class="blog-item-date">2025.10</span>
+        <span class="blog-item-content">
+          <h4>Goroutines and Go Scheduler</h4>
+          <p>How Go's G-P-M model maps goroutines to OS threads and why it matters.</p>
+        </span>
+        <span class="blog-item-meta">10 min</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ═══ CODE ═══ -->
+  <section class="section">
+    <p class="section-label">Code Blocks</p>
+    <h2 class="section-heading">Syntax Highlighting</h2>
+    <div class="code-block">
+      <div class="code-header"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+      <pre><span class="c-kw">package</span> main
+
+<span class="c-kw">import</span> (
+    <span class="c-str">"fmt"</span>
+    <span class="c-str">"sync"</span>
+)
+
+<span class="c-cm">// singleflight deduplicates concurrent function calls.</span>
+<span class="c-kw">func</span> <span class="c-fn">main</span>() {
+    <span class="c-kw">var</span> wg sync.WaitGroup
+    <span class="c-kw">for</span> i := <span class="c-fn">0</span>; i &lt; <span class="c-fn">5</span>; i++ {
+        wg.Add(<span class="c-fn">1</span>)
+        <span class="c-kw">go</span> <span class="c-kw">func</span>(id <span class="c-kw">int</span>) {
+            <span class="c-kw">defer</span> wg.Done()
+            result := <span class="c-fn">expensiveCall</span>(<span class="c-str">"key"</span>)
+            fmt.Printf(<span class="c-str">"goroutine %d: %v\n"</span>, id, result)
+        }(i)
+    }
+    wg.Wait()
+}</pre>
+    </div>
+  </section>
+
+  <!-- ═══ PHOTO GRID ═══ -->
+  <section class="section">
+    <p class="section-label">Gallery Preview</p>
+    <h2 class="section-heading">Photos</h2>
+    <div class="photo-grid">
+      <div class="photo-grid-item"></div>
+      <div class="photo-grid-item"></div>
+      <div class="photo-grid-item"></div>
+      <div class="photo-grid-item"></div>
+      <div class="photo-grid-item"></div>
+    </div>
+  </section>
+
+  <!-- ═══ EXPERIENCE TIMELINE ═══ -->
+  <section class="section">
+    <p class="section-label">About</p>
+    <h2 class="section-heading">Experience</h2>
+    <div class="timeline">
+      <div class="timeline-item">
+        <p class="timeline-date">2025 — Present</p>
+        <p class="timeline-role">Blockchain Developer</p>
+        <p class="timeline-company">Presto Labs · Shanghai</p>
+        <p class="timeline-desc">Designed MPC signing service for ED25519 and Keccak-256 in Go. Integrated DeFi protocols (AaveV3, UniswapV3). Built realtime onchain CEX transfer feeder.</p>
+      </div>
+      <div class="timeline-item">
+        <p class="timeline-date">2024 — 2025</p>
+        <p class="timeline-role">Backend & Smart Contract Engineer Intern</p>
+        <p class="timeline-company">Neo Smart Economy · Shanghai</p>
+        <p class="timeline-desc">Built high-performance blockchain faucet. Optimized Gin server with connection pooling, improving QPS 3×. Integrated Google reCAPTCHA v3 and Redis rate limiting.</p>
+      </div>
+      <div class="timeline-item">
+        <p class="timeline-date">2024 — 2025</p>
+        <p class="timeline-role">Research Assistant</p>
+        <p class="timeline-company">CASP Research Lab, BU · Boston</p>
+        <p class="timeline-desc">Built secure data pipeline for Massachusetts Government EOLWD. Leveraged docTR and OpenCV for confidential document processing. Designed Queryshield MPC interface.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <span class="footer-text">&copy; 2026 Jida Li</span>
+  <ul class="footer-links">
+    <li><a href="https://github.com/jidalii">GitHub</a></li>
+    <li><a href="https://linkedin.com/in/jida-li">LinkedIn</a></li>
+    <li><a href="https://x.com/0xcocacolaL">Twitter</a></li>
+    <li><a href="/CV_Jida_Li.pdf">Résumé</a></li>
+  </ul>
+</footer>
+
+<script>
+var THEME_KEY='theme-pref';
+function getSaved(){return localStorage.getItem(THEME_KEY)}
+function cycleTheme(){
+  var cur=getSaved(),next;
+  if(!cur||cur==='system')next='light';
+  else if(cur==='light')next='dark';
+  else next='system';
+  apply(next)
+}
+function apply(mode){
+  var el=document.documentElement;
+  if(mode==='system'){el.removeAttribute('data-theme');localStorage.removeItem(THEME_KEY)}
+  else{el.setAttribute('data-theme',mode);localStorage.setItem(THEME_KEY,mode)}
+}
+(function init(){
+  var s=getSaved();if(s&&s!=='system')document.documentElement.setAttribute('data-theme',s)
+})()
+
+</body>
+</html>

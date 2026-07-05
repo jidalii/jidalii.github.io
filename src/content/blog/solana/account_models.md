@@ -2,8 +2,8 @@
 title: "Solana: Account Models"
 description: "An overview of the account models on Solana."
 date: 2024-11-03
-category: "Solana"
-tags: ["Basics", "Web3"]
+category: "blockchain"
+tags: ["solana", "web3", "account-model"]
 ---
 
 # Solana: Account Models

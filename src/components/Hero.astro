@@ -1,0 +1,66 @@
+---
+import EncryptedText from './EncryptedText.astro';
+
+const heroCode = `for {
+    select {
+    case msg := <-c.P.OutCh:
+        err := c.storeOutMsg(msg)
+        if err != nil {
+            common.Logger.Errorf(
+                "store msg: %v", err,
+            )
+        }
+    case msg := <-c.P.EndCh:
+        secretShare := msg.LocalSecrets
+        bz, _ := json.Marshal(msg)
+        partySecretJson := PartySecretJson{
+            PubkeyX: msg.EDDSAPub.X().Text(16),
+            PubkeyY: msg.EDDSAPub.Y().Text(16),
+            Curve:   curveStr(c.Curve),
+        }
+        secretBytes, _ := json.Marshal(partySecretJson)
+        newWallet := &MPCNewWalletMsg{
+            CurveType:       pb.CurveType_ED25519,
+            PartySecret:     secretShare.Xi.Text(16),
+            PartySecretJson: base64.StdEncoding.EncodeToString(
+                secretBytes,
+            ),
+            LocalSaveData: base64.StdEncoding.EncodeToString(bz),
+        }
+        c.msgMu.Lock()
+        defer c.msgMu.Unlock()
+        c.Wallet = newWallet
+        return
+    case <-time.After(time.Hour):
+        return
+    }
+}`;
+---
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-15 items-start pt-8 md:pt-12 pb-24 md:pb-28 px-5 md:px-7" style="max-width:var(--max-content);margin:0 auto">
+  <div class="min-w-0">
+    <p class="mb-7 tracking-widest uppercase" style="font-family:var(--font-mono);font-size:.85rem;font-weight:500;color:var(--color-accent-yellow)">Developer &amp; Photographer</p>
+    <h1 style="color:var(--color-text-primary)">Building <em class="font-normal not-italic">reliable</em> systems<br><span style="white-space:nowrap">for <span style="display:inline-block;min-width:8.5em"><EncryptedText text="decentralized" delay={80} charset="abcdefghijklmnopqrstuvwxyz0123456789" /></span></span> markets.</h1>
+    <p class="mt-7 max-w-[540px] text-lg" style="color:var(--color-text-secondary);line-height:1.7">
+      I work on blockchain infrastructure, quant trading systems, and backend services where correctness, latency, and safety matter. My work sits close to asset movement: MPC signing, on-chain data pipelines, DeFi protocol integration, and systems that need to stay precise under pressure.
+    </p>
+    <p class="mt-4 max-w-[540px] text-base" style="color:var(--color-text-secondary);line-height:1.7">
+      Outside of code, photography keeps me attentive to light, structure, and timing — the same instincts I bring to engineering.
+    </p>
+    <div class="mt-10" style="width:32px;height:2px;background:var(--color-accent-yellow)"></div>
+  </div>
+  <pre class="select-none overflow-hidden" style="font-family:var(--font-mono);font-size:.48rem;line-height:2.1;color:var(--color-text-tertiary);opacity:.4;max-width:460px;white-space:pre;background:transparent;border:none;padding:0;margin:0">{heroCode}</pre>
+</div>
+
+<style is:global>
+  @keyframes revealUp{to{opacity:1;transform:translateY(0)}}
+  @keyframes revealLine{to{opacity:1;transform:scaleX(1)}}
+  .hero-eyebrow,.hero-subtitle,.hero-accent-line{opacity:0;transform:translateY(16px)}
+  .hero-eyebrow{animation:revealUp .7s cubic-bezier(0.16,1,0.3,1) .1s forwards}
+  .hero h1{opacity:0;transform:translateY(16px);animation:revealUp .7s cubic-bezier(0.16,1,0.3,1) .25s forwards}
+  .hero-subtitle{animation:revealUp .7s cubic-bezier(0.16,1,0.3,1) .4s forwards}
+  .hero-accent-line{animation:revealLine .6s cubic-bezier(0.16,1,0.3,1) .55s forwards;transform:scaleX(0);transform-origin:left}
+  @media(max-width:768px){
+    pre{font-size:.44rem;opacity:.3;max-width:100%}
+  }
+</style>

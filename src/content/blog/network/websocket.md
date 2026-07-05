@@ -2,8 +2,8 @@
 title: "WebSockets"
 description: "An overview of WebSockets."
 date: 2024-11-17
-category: "Computer Network"
-tags: ["WebSockets", "Application Layer"]
+category: "networking"
+tags: ["websocket", "network", "http"]
 ---
 
 # 1. WebSockets

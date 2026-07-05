@@ -2,8 +2,8 @@
 title: "Golang Standard Package: context"
 description: "An overview and usage of the stardard package context in Go."
 date: 2024-12-04
-category: "Golang"
-tags: ["Golang Standard Package", "Concurrency"]
+category: "golang"
+tags: ["go", "context", "concurrency", "std"]
 ---
 
 # TL;TR

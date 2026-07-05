@@ -2,8 +2,8 @@
 title: "Concurrency in Go (1): sync"
 description: "An overview and usage of sync package in Go."
 date: 2024-12-19
-category: "Golang"
-tags: ["Golang Standard Package", "Concurrency"]
+category: "golang"
+tags: ["go", "concurrency", "sync", "mutex", "std"]
 ---
 The `sync` library provides some basic synchronization primitives. The types in the `sync` library are mostly intended for low-level routine. Higher-level synchronization is better done via channels and communication.
 

@@ -2,9 +2,8 @@ import dayjs from "dayjs";
 import advancedFormat from 'dayjs/plugin/advancedFormat'
 import utc from "dayjs/plugin/utc";
 import {t} from '../i18n/utils';
-import {config} from '../consts';
 
-dayjs.locale(config.lang);
+dayjs.locale('en');
 dayjs.extend(advancedFormat)
 dayjs.extend(utc);
 

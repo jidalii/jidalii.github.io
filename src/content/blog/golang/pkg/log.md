@@ -2,8 +2,8 @@
 title: "Golang Standard Package: log"
 description: "An overview and usage of the stardard package flag in Go."
 date: 2024-11-23
-category: "Golang"
-tags: ["Golang Standard Package", "logger"]
+category: "golang"
+tags: ["go", "logging", "std"]
 ---
 
 # 1. Methods in log

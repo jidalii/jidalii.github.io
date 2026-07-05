@@ -1,0 +1,72 @@
+---
+const { text = '', delay = 120, charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-={}[];:,.<>/?' } = Astro.props;
+const id = 'et-' + Math.random().toString(36).slice(2, 8);
+---
+
+<span id={id} aria-label={text} style="display:inline"></span>
+
+<script define:vars={{ id, text, delay, charset }}>
+  (function() {
+    var el = document.getElementById(id);
+    if (!el) return;
+    var chars = text.split('');
+    var current = new Array(chars.length);
+    var revealed = 0;
+    var started = false;
+    var interval = 0;
+    var scrambler = 0;
+
+    function randChar() {
+      return charset[Math.floor(Math.random() * charset.length)];
+    }
+
+    for (var i = 0; i < chars.length; i++) {
+      current[i] = chars[i] === ' ' ? ' ' : randChar();
+    }
+
+    function render() {
+      el.textContent = current.join('');
+    }
+    render();
+
+    // Fast scramble jitter (every 40ms) for unrevealed chars
+    scrambler = setInterval(function() {
+      if (!started) return;
+      var changed = false;
+      for (var i = revealed; i < chars.length; i++) {
+        if (chars[i] !== ' ') {
+          current[i] = randChar();
+          changed = true;
+        }
+      }
+      if (changed) render();
+    }, 40);
+
+    function start() {
+      if (started) return;
+      started = true;
+      interval = setInterval(function() {
+        if (revealed >= chars.length) {
+          clearInterval(interval);
+          clearInterval(scrambler);
+          // Final render with exact text
+          for (var i = 0; i < chars.length; i++) current[i] = chars[i];
+          render();
+          return;
+        }
+        current[revealed] = chars[revealed];
+        revealed++;
+        render();
+      }, delay);
+    }
+
+    // Start after 600ms delay so user sees the scramble first
+    setTimeout(start, 600);
+
+    // Also start immediately if visible
+    var obs = new IntersectionObserver(function(entries) {
+      if (entries[0].isIntersecting) { setTimeout(start, 300); obs.disconnect(); }
+    }, { threshold: 0.5 });
+    obs.observe(el);
+  })();
+</script>

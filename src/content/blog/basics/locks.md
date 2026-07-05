@@ -2,13 +2,14 @@
 title: "Everything You Need to Know About Locks"
 description: "This blog introduces you to common locks, like mutex, spinlock, optimistic lock, etc."
 date: 2025-01-25
-category: "Distributed Systems"
-tags: ["Lock", "Concurrency"]
+category: "systems"
+tags: ["locks", "mutex", "concurrency", "go"]
 ---
 
 There are various locks for you to choose when developing. Each lock has different cost and use cases. In the high concurrent cases, choosing the right locks help improve system performance, otherwise your system could suffer performance loss.
 
 ## Types of Locks
+claude plugin install frontend-design@claude-plugins-official
 
 - Mutex (Mutual Exclusive) Lock
 - Spin Lock

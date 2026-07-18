@@ -24,10 +24,13 @@ const jobs = (experienceData?.jobs || []).sort((a, b) => {
   </div>
 
   <div class="section-band band-cool" style="padding-top:60px">
-    <div class="section" style="max-width:var(--max-content);margin:0 auto;padding:0 24px">
-      <p class="section-label">Experience &amp; Education</p>
-      <h2 class="section-heading">Where I've worked</h2>
-      <p style="color:var(--color-text-secondary);max-width:540px;margin-top:-28px;margin-bottom:44px;font-size:.95rem">Building low-latency blockchain infrastructure, secure backend systems, and data pipelines across trading, research, and protocol environments.</p>
+    <div class="section exp-grid" style="max-width:var(--max-content);margin:0 auto;padding:0 24px">
+      <div class="exp-rail">
+        <p class="section-label">Experience &amp; Education</p>
+        <h2 class="section-heading">Where I've worked</h2>
+        <p class="exp-desc">Building low-latency blockchain infrastructure, secure backend systems, and data pipelines across trading, research, and protocol environments.</p>
+        <div class="exp-accent"></div>
+      </div>
 
       <div class="timeline" id="timeline">
         <!-- 1. Scroll-linked vertical line -->
@@ -81,10 +84,7 @@ const jobs = (experienceData?.jobs || []).sort((a, b) => {
 </BaseLayout>
 
 <style>
-  /* ═══ SECTION BANDS ═══ */
-  .section-band{position:relative;padding:80px 0}
-  .band-warm{background:var(--color-band-warm)}
-  .band-cool{background:var(--color-band-cool)}
+  /* section-band / band-* styles live in bands.css (global) */
 
   /* ═══ GLYPH MATRIX TRANSITION ═══ */
   .band-dither{
@@ -100,16 +100,36 @@ const jobs = (experienceData?.jobs || []).sort((a, b) => {
     font-size: 0.68rem;
     letter-spacing: 0.18em;
     text-transform: uppercase;
-    color: var(--color-text-tertiary);
-    margin-bottom: 8px;
+    color: #4A5654;
+    margin-bottom: 10px;
   }
   .section-heading {
     font-family: var(--font-display);
-    font-size: 1.5rem;
+    font-size: clamp(1.7rem, 3vw, 2.25rem);
     font-weight: 600;
     color: var(--color-text-primary);
-    margin-bottom: 36px;
+    margin-bottom: 0;
     letter-spacing: -0.015em;
+  }
+
+  /* ═══ EXPERIENCE LAYOUT — sticky rail + timeline ═══ */
+  .exp-grid { display: grid; grid-template-columns: 1fr; gap: 48px; }
+  .exp-desc {
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: #4A5654;
+    max-width: 22rem;
+    margin: 22px 0 0;
+  }
+  .exp-accent {
+    width: 32px;
+    height: 2px;
+    background: var(--color-accent-gold);
+    margin-top: 28px;
+  }
+  @media (min-width: 900px) {
+    .exp-grid { grid-template-columns: 1fr 1.35fr; gap: 88px; }
+    .exp-rail { position: sticky; top: 120px; align-self: start; }
   }
 
   /* ═══ TIMELINE ═══ */
@@ -122,7 +142,7 @@ const jobs = (experienceData?.jobs || []).sort((a, b) => {
     top: 8px;
     bottom: 8px;
     width: 1px;
-    background: var(--color-border);
+    background: linear-gradient(to bottom, var(--color-accent-gold), rgba(196, 160, 74, 0.15));
     transform-origin: top;
     transform: scaleY(0);
     transition: transform 0.4s ease-out;
@@ -132,20 +152,21 @@ const jobs = (experienceData?.jobs || []).sort((a, b) => {
   /* ── Row ── */
   .timeline-row {
     position: relative;
-    padding: 22px 0 22px 36px;
-    border-bottom: none;
+    padding: 0 0 34px 38px;
+    margin-bottom: 34px;
+    border-bottom: 1px solid rgba(20, 19, 17, 0.08);
     opacity: 0;
     transform: translateY(18px);
     transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   }
   .timeline-row.visible { opacity: 1; transform: translateY(0); }
-  .timeline-row:last-child { border-bottom: none; }
+  .timeline-row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
 
   /* ── Dot ── */
   .timeline-dot-wrap {
     position: absolute;
-    left: -4px;
-    top: 27px;
+    left: -4.5px;
+    top: 7px;
     width: 10px;
     height: 10px;
   }
@@ -153,13 +174,15 @@ const jobs = (experienceData?.jobs || []).sort((a, b) => {
     position: absolute;
     inset: 0;
     border-radius: 50%;
-    background: #D1CCC2;
+    background: rgba(196, 160, 74, 0.35);
     transform: scale(0.4);
     transition: background 0.45s cubic-bezier(0.16, 1, 0.3, 1),
-                transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+                transform 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.45s cubic-bezier(0.16, 1, 0.3, 1);
   }
   .timeline-row.visible .timeline-dot {
-    background: #6B665E;
+    background: var(--color-accent-gold);
+    box-shadow: 0 0 0 4px var(--color-band-cool);
     transform: scale(1);
   }
 
@@ -177,48 +200,55 @@ const jobs = (experienceData?.jobs || []).sort((a, b) => {
   /* ── Typography ── */
   .timeline-date {
     font-family: var(--font-mono);
-    font-size: 0.68rem;
-    color: var(--color-text-tertiary);
-    margin-bottom: 4px;
-    letter-spacing: 0.04em;
+    font-size: 0.7rem;
+    color: #4A5654;
+    margin-bottom: 6px;
+    letter-spacing: 0.05em;
   }
   .timeline-role {
     font-family: var(--font-display);
-    font-size: 1.1rem;
-    font-weight: 500;
+    font-size: 1.38rem;
+    font-weight: 600;
     color: var(--color-text-primary);
-    margin-bottom: 2px;
+    margin-bottom: 3px;
   }
   .timeline-company {
-    font-size: 0.85rem;
-    color: var(--color-text-secondary);
-    margin-bottom: 10px;
+    font-size: 0.88rem;
+    color: #4A5654;
+    margin-bottom: 12px;
   }
   /* ── Summary ── */
   .timeline-summary {
-    font-size: 0.88rem;
-    color: #4D4944;
-    line-height: 1.6;
+    font-size: 0.9rem;
+    color: #3F4A47;
+    line-height: 1.65;
     max-width: 36rem;
-    margin: 0 0 12px;
+    margin: 0 0 14px;
   }
 
   /* ── Tech tags ── */
   .timeline-tags {
     display: flex;
     flex-wrap: wrap;
-    gap: 6px 12px;
+    gap: 7px;
     list-style: none;
     padding: 0;
     margin: 0 0 12px;
     font-family: var(--font-mono);
-    font-size: 0.68rem;
-    color: var(--color-text-tertiary);
+    font-size: 0.66rem;
+  }
+  .timeline-tags li {
+    color: #4A5654;
+    letter-spacing: 0.03em;
+    border: 1px solid rgba(20, 19, 17, 0.14);
+    border-radius: 999px;
+    padding: 3px 11px;
+    background: rgba(255, 255, 255, 0.22);
   }
 
   .timeline-desc {
     font-size: 0.82rem;
-    color: var(--color-text-secondary);
+    color: #3F4A47;
     line-height: 1.6;
     list-style: none;
     padding: 0;
@@ -237,7 +267,7 @@ const jobs = (experienceData?.jobs || []).sort((a, b) => {
     width: 4px;
     height: 4px;
     border-radius: 50%;
-    background: #D1CCC2;
+    background: rgba(196, 160, 74, 0.6);
   }
 
   /* ── Collapsible expand toggle ── */
@@ -249,7 +279,7 @@ const jobs = (experienceData?.jobs || []).sort((a, b) => {
     font-size: 0.78rem;
     font-weight: 450;
     letter-spacing: 0.01em;
-    color: var(--color-accent-blue);
+    color: #41546E;
     background: none;
     border: none;
     cursor: pointer;
@@ -257,7 +287,7 @@ const jobs = (experienceData?.jobs || []).sort((a, b) => {
     padding: 5px 0;
     transition: color 0.25s;
   }
-  .timeline-toggle:hover { color: var(--color-accent-blue-hov); }
+  .timeline-toggle:hover { color: #33445A; }
   .timeline-toggle-arrow {
     display: inline-block;
     transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
@@ -284,15 +314,13 @@ const jobs = (experienceData?.jobs || []).sort((a, b) => {
 
   /* ── Responsive ── */
   @media (max-width: 640px) {
-    .timeline-row { padding: 16px 0 16px 26px; }
-    .timeline-dot-wrap { left: -3px; top: 21px; width: 8px; height: 8px; }
-    .timeline-role { font-size: 1rem; }
-    .section-heading { font-size: 1.25rem; }
+    .timeline-row { padding: 0 0 28px 30px; margin-bottom: 28px; }
+    .timeline-dot-wrap { left: -4px; top: 6px; width: 8px; height: 8px; }
+    .timeline-role { font-size: 1.15rem; }
+    .section-heading { font-size: 1.7rem; }
   }
 
-  /* keep band-* alive for other pages */
-  .band-warm{background:var(--color-band-warm)}
-  .band-cool{background:var(--color-band-cool)}
+  /* band-* gradients live in bands.css (global) */
 </style>
 
 <script>

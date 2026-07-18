@@ -26,6 +26,9 @@
   --color-accent-blue:       #5C7090;
   --color-accent-blue-hov:   #4A5E7A;
   --color-accent-terracotta: #B8755E;
+  --color-ink:               #141311;
+  --color-accent-gold:       #C4A04A;
+  --color-accent-gold-text:  #8A6D1F;
   --font-display: 'Source Serif 4', 'Noto Serif SC', Georgia, serif;
   --font-body:    'Inter', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono:    'JetBrains Mono', 'SF Mono', monospace;
@@ -45,11 +48,11 @@ body{
   transition:background .4s,color .4s;
 }
 
-/* Noise grain overlay */
+/* Noise grain overlay — neutral film grain (desaturated, fine) */
 body::after{
   content:'';position:fixed;inset:0;z-index:9999;pointer-events:none;
-  opacity:.035;
-  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity:.04;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   background-repeat:repeat;background-size:256px 256px;
 }
 

@@ -1,14 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import GlyphMatrix from '../../components/GlyphMatrix.astro';
-import { getCollection } from 'astro:content';
-
-const expData = await getCollection('experience');
-const jobs = (expData[0]?.data?.jobs || []).sort((a, b) => {
-  if (a.end === 'Present') return -1;
-  if (b.end === 'Present') return 1;
-  return b.start.localeCompare(a.start);
-});
 ---
 
 <BaseLayout>
@@ -29,35 +21,12 @@ const jobs = (expData[0]?.data?.jobs || []).sort((a, b) => {
   </div>
 
   <div class="section-band band-cool" style="padding-top:60px">
-    <div class="accent-rule"></div>
-    <section class="section reveal">
-      <p class="section-label">Experience &amp; Education</p>
-      <div class="timeline">
-        {jobs.map(job => (
-          <div class="timeline-item">
-            <p class="timeline-date">{job.start} — {job.end}</p>
-            <p class="timeline-role">{job.role}</p>
-            <p class="timeline-company">{job.url ? <a href={job.url} target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--color-accent-blue)">{job.company}</a> : job.company} · {job.location}</p>
-            <ul class="timeline-desc">
-              {job.highlights.map(h => <li>{h}</li>)}
-            </ul>
-          </div>
-        ))}
-      </div>
-    </section>
-  </div>
-
-  <div class="band-dither dither-cool-warm">
-    <GlyphMatrix colorStart="#7B94B0" colorEnd="#C4A04A" reverse glyphs="01{}[]()/\\<>*+-=" cellSize={16} mutationRate={0.04} interval={80} fadeBottom={0.3} />
-  </div>
-
-  <div class="section-band band-warm" style="padding-top:60px">
     <section class="section">
       <p class="section-label">Skills</p>
       <div class="grid grid-cols-3 gap-8 md:grid-cols-1">
-        <div><strong style="font-family:var(--font-display);font-size:1rem;color:var(--color-text-primary);display:block;margin-bottom:8px">Languages</strong><p class="text-sm" style="color:var(--color-text-secondary)">Go, C++, Python, Solidity, Rust, SQL</p></div>
-        <div><strong style="font-family:var(--font-display);font-size:1rem;color:var(--color-text-primary);display:block;margin-bottom:8px">Frameworks</strong><p class="text-sm" style="color:var(--color-text-secondary)">Gin, Foundry, The Graph, go-zero, Streamlit, FastAPI</p></div>
-        <div><strong style="font-family:var(--font-display);font-size:1rem;color:var(--color-text-primary);display:block;margin-bottom:8px">Infrastructure</strong><p class="text-sm" style="color:var(--color-text-secondary)">Kafka, Redis, Docker, PostgreSQL, Prometheus, Grafana, Linux</p></div>
+        <div><strong style="font-family:var(--font-display);font-size:1rem;color:var(--color-text-primary);display:block;margin-bottom:8px">Languages</strong><p class="text-sm" style="color:#3F4A47">Go, C++, Python, Solidity, Rust, SQL</p></div>
+        <div><strong style="font-family:var(--font-display);font-size:1rem;color:var(--color-text-primary);display:block;margin-bottom:8px">Frameworks</strong><p class="text-sm" style="color:#3F4A47">Gin, Foundry, The Graph, go-zero, Streamlit, FastAPI</p></div>
+        <div><strong style="font-family:var(--font-display);font-size:1rem;color:var(--color-text-primary);display:block;margin-bottom:8px">Infrastructure</strong><p class="text-sm" style="color:#3F4A47">Kafka, Redis, Docker, PostgreSQL, Prometheus, Grafana, Linux</p></div>
       </div>
     </section>
   </div>
@@ -69,14 +38,4 @@ const jobs = (expData[0]?.data?.jobs || []).sort((a, b) => {
   .band-cool{background:var(--color-band-cool)}
   .band-dither{position:relative;width:100%;height:140px;overflow:hidden;margin-top:-1px;margin-bottom:-1px;z-index:2}
   .dither-warm-cool{background-color:transparent}
-  .dither-cool-warm{background-color:transparent}
-  .timeline{position:relative;padding-left:32px}
-  .timeline::before{content:'';position:absolute;left:0;top:4px;bottom:4px;width:1px;background:var(--color-border)}
-  .timeline-item{position:relative;padding-bottom:40px}
-  .timeline-item:last-child{padding-bottom:0}
-  .timeline-item::before{content:'';position:absolute;left:-36px;top:6px;width:10px;height:10px;border-radius:50%;background:var(--color-accent-yellow);box-shadow:0 0 0 4px color-mix(in srgb,var(--color-accent-yellow) 15%,transparent)}
-  .timeline-date{font-family:var(--font-mono);font-size:.7rem;color:var(--color-text-tertiary);margin-bottom:4px}
-  .timeline-role{font-family:var(--font-display);font-size:1.1rem;font-weight:500;color:var(--color-text-primary);margin-bottom:2px}
-  .timeline-company{font-size:.85rem;color:var(--color-text-secondary);margin-bottom:8px}
-  .timeline-desc{font-size:.82rem;color:var(--color-text-secondary);line-height:1.6;list-style:disc;padding-left:16px}
 </style>

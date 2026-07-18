@@ -20,7 +20,7 @@
 .section{max-width:var(--max-content);margin:0 auto;padding:0 28px}
 .section-label{
   font-family:var(--font-mono);font-size:.78rem;font-weight:500;
-  color:var(--color-accent-yellow);letter-spacing:.14em;
+  color:var(--color-accent-gold-text);letter-spacing:.14em;
   text-transform:uppercase;margin-bottom:36px;
 }
 .section-heading{

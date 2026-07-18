@@ -78,15 +78,10 @@ const cells = [...autoCells, ctaCell];
           width={400}
           densities={[1, 2]}
           format="webp"
-          quality={75}
+          quality={100}
           loading="lazy"
           decoding="async"
         />
-        <div class="bento-blur-overlay">
-          {Array.from({ length: 8 }).map((_, i) => (
-            <div class="bento-blur-layer" style={`--blur:${(i * 0.25).toFixed(2)}px;--i:${i};--n:8`}></div>
-          ))}
-        </div>
         {cell.title && <span class="bento-gallery-caption">{cell.title}</span>}
       </div>
     );
@@ -114,31 +109,12 @@ const cells = [...autoCells, ctaCell];
   }
   .photo-item:hover > :global(img){transform:scale(1.04)}
 
-  /* ── Progressive blur overlay ── */
-  .bento-blur-overlay{
-    position:absolute;inset:0;overflow:hidden;
-    opacity:0;transition:opacity .3s ease-out;
-    pointer-events:none;
-  }
-  .photo-item:hover .bento-blur-overlay{opacity:1}
-
-  .bento-blur-layer{
-    position:absolute;inset:0;
-    backdrop-filter:blur(var(--blur,0px));
-    -webkit-backdrop-filter:blur(var(--blur,0px));
-    --seg:calc(1 / (var(--n) + 1));
-    --s1:calc(var(--i) * var(--seg) * 100%);
-    --s2:calc((var(--i) + 1) * var(--seg) * 100%);
-    --s3:calc((var(--i) + 2) * var(--seg) * 100%);
-    --s4:calc((var(--i) + 3) * var(--seg) * 100%);
-    -webkit-mask-image:linear-gradient(to top,transparent var(--s1),black var(--s2),black var(--s3),transparent var(--s4));
-    mask-image:linear-gradient(to top,transparent var(--s1),black var(--s2),black var(--s3),transparent var(--s4));
-  }
-
+  /* ── Caption (no blur — bottom scrim keeps it readable) ── */
   .bento-gallery-caption{
-    position:absolute;bottom:0;left:0;right:0;padding:16px 20px;
+    position:absolute;bottom:0;left:0;right:0;padding:30px 20px 16px;
     color:#fff;font-size:.78rem;font-weight:500;
     text-shadow:0 1px 3px rgba(0,0,0,.4);
+    background:linear-gradient(to top,rgba(0,0,0,.38),transparent);
     opacity:0;transform:translateY(8px);
     transition:opacity .3s var(--ease-out-expo),transform .3s var(--ease-out-expo);
   }

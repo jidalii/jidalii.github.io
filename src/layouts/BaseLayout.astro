@@ -2,13 +2,15 @@
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import '../styles/index.css';
+
+const { title } = Astro.props;
 ---
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <title>Jida Li — Developer &amp; Photographer</title>
+    <title>{title || "Jida Li — Developer &amp; Photographer"}</title>
     <slot name="head" />
   </head>
   <body>

@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "module": "ES2022",
     "lib": [
       "es2020"
@@ -16,14 +16,9 @@
     "strictNullChecks": false,
     "allowJs": false,
     "checkJs": false,
-    "baseUrl": ".",
     "paths": {
-      "$components": [
-        "./src/components"
-      ],
-      "$": [
-        "./src"
-      ]
+      "$components/*": ["./src/components/*"],
+      "$/*": ["./src/*"]
     },
     "types": [
       "astro/env"

@@ -1,0 +1,268 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ContraCanvas from '../components/ContraCanvas.astro';
+---
+
+<BaseLayout title="Experiment — Jida Li">
+
+  <!-- ═══ HERO: Full-bleed canvas behind copy ═══ -->
+  <div class="hero-wrap">
+    <div class="hero-canvas">
+      <ContraCanvas dotColor="rgba(242, 241, 237, 0.58)" bgColor="#C7D9D6" gap={10} speed={0.8} density={1.2} />
+    </div>
+    <div class="hero-overlay">
+      <p class="eyebrow">Experiment №1</p>
+      <h1 class="hero-title">Halftone Wave Canvas</h1>
+      <p class="hero-desc">
+        An animated particle field driven by layered sine waves. Dots pulse, cluster, and fade in response
+        to a composite wave function — part field, part center bias, part noise. Built as a vanilla JS
+        canvas component in Astro.
+      </p>
+    </div>
+  </div>
+
+  <!-- ═══ BAND: Ambient divider strip ═══ -->
+  <div class="canvas-strip">
+    <ContraCanvas dotColor="rgba(242, 241, 237, 0.45)" bgColor="#9BAFAC" gap={13} speed={0.6} />
+  </div>
+
+  <div class="section-band band-warm" style="padding-top:60px;padding-bottom:60px">
+    <div class="accent-rule"></div>
+    <section class="section reveal">
+      <p class="section-label">Props &amp; Parameters</p>
+      <h2 class="section-heading">What you can tune</h2>
+      <p style="color:var(--color-text-secondary);max-width:540px;margin-top:-28px;margin-bottom:32px;font-size:.95rem">
+        The component exposes a handful of knobs — no React, no Solid, just an Astro component with a
+        vanilla JS canvas loop. Same pattern as GlyphMatrix.
+      </p>
+
+      <div class="props-grid">
+        <div class="prop-card">
+          <code class="prop-name">dotColor</code>
+          <p class="prop-desc">RGBA color of each dot. Alpha channel drives max opacity; the wave function modulates below that ceiling.</p>
+        </div>
+        <div class="prop-card">
+          <code class="prop-name">bgColor</code>
+          <p class="prop-desc">Solid fill behind the dots. Use <code>"transparent"</code> to let the CSS background show through.</p>
+        </div>
+        <div class="prop-card">
+          <code class="prop-name">gap</code>
+          <p class="prop-desc">Grid spacing in px (default 11). Smaller = denser dots, more GPU work.</p>
+        </div>
+        <div class="prop-card">
+          <code class="prop-name">speed</code>
+          <p class="prop-desc">Animation speed multiplier. 0.5 = half speed, 2.0 = double.</p>
+        </div>
+        <div class="prop-card">
+          <code class="prop-name">density</code>
+          <p class="prop-desc">Dot density multiplier. 0.5 = sparser, 2.0 = tighter grid. Acts as divisor on gap.</p>
+        </div>
+        <div class="prop-card">
+          <code class="prop-name">className</code>
+          <p class="prop-desc">CSS class forwarded to the wrapper div for sizing and positioning.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ═══ BAND: Second divider ═══ -->
+  <div class="canvas-strip" style="background:#B8CCC8">
+    <ContraCanvas dotColor="rgba(60, 70, 80, 0.35)" bgColor="#B8CCC8" gap={9} speed={1.2} density={0.9} />
+  </div>
+
+  <div class="section-band band-cool" style="padding-top:60px;padding-bottom:60px">
+    <section class="section reveal">
+      <p class="section-label">Pattern</p>
+      <h2 class="section-heading">How it works</h2>
+      <p style="color:var(--color-text-secondary);max-width:540px;margin-top:-28px;margin-bottom:28px;font-size:.95rem">
+        Each dot's alpha is the sum of three layers, clamped and thresholded:
+      </p>
+      <ol class="tech-list">
+        <li><strong>Wave field</strong> — three overlapping sine/cosine waves create organic flow patterns across the grid.</li>
+        <li><strong>Center bias</strong> — a radial falloff from the center keeps the edges quieter and the middle more active.</li>
+        <li><strong>Noise</strong> — a low-frequency spatial noise term breaks up the regularity so it doesn't look too clean.</li>
+      </ol>
+      <p style="color:var(--color-text-secondary);max-width:540px;margin-top:20px;font-size:.95rem">
+        The result reads as a living texture — not a static pattern, not random noise, but something in between.
+        It's the same kind of effect you see on creative-tech sites like <a href="https://contralabs.com" target="_blank" rel="noopener" style="color:var(--color-accent-blue);text-decoration:underline;text-underline-offset:3px">Contra Labs</a>.
+      </p>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  /* ═══ HERO WITH CANVAS BACKGROUND ═══ */
+  .hero-wrap {
+    position: relative;
+    width: 100%;
+    min-height: 420px;
+    overflow: hidden;
+    background: #C7D9D6;
+    margin-top: -1px;
+  }
+
+  .hero-canvas {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+
+  .hero-overlay {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 100px 24px 80px;
+    max-width: 620px;
+    margin: 0 auto;
+  }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-text-tertiary);
+    margin-bottom: 12px;
+  }
+
+  .hero-title {
+    font-family: var(--font-display);
+    font-size: 2.4rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin: 0 0 20px;
+    letter-spacing: -0.02em;
+  }
+
+  .hero-desc {
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    line-height: 1.65;
+    color: var(--color-text-secondary);
+    max-width: 480px;
+  }
+
+  /* ═══ CANVAS DIVIDER STRIP ═══ */
+  .canvas-strip {
+    position: relative;
+    width: 100%;
+    height: 130px;
+    overflow: hidden;
+    background: #9BAFAC;
+    margin-top: -1px;
+    margin-bottom: -1px;
+    z-index: 2;
+  }
+
+  /* ═══ PROPS GRID ═══ */
+  .props-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+
+  .prop-card {
+    background: var(--color-card);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    padding: 20px 22px;
+  }
+
+  .prop-name {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    color: var(--color-accent-blue);
+    background: color-mix(in srgb, var(--color-accent-blue) 8%, transparent);
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    display: inline-block;
+  }
+
+  .prop-desc {
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+    line-height: 1.55;
+    margin: 0;
+  }
+
+  .prop-desc code {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--color-accent-terracotta);
+    background: color-mix(in srgb, var(--color-accent-terracotta) 6%, transparent);
+    padding: 1px 5px;
+    border-radius: 3px;
+  }
+
+  /* ═══ TECH LIST ═══ */
+  .tech-list {
+    font-size: 0.92rem;
+    color: var(--color-text-secondary);
+    line-height: 1.7;
+    padding-left: 20px;
+    max-width: 520px;
+  }
+
+  .tech-list li {
+    margin-bottom: 8px;
+  }
+
+  .tech-list strong {
+    color: var(--color-text-primary);
+  }
+
+  /* ═══ SECTION SHARED ═══ */
+  .section-band { position: relative; padding: 80px 0; }
+  .band-warm { background: var(--color-band-warm); }
+  .band-cool { background: var(--color-band-cool); }
+
+  .section-label {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-text-tertiary);
+    margin-bottom: 8px;
+  }
+
+  .section-heading {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin: 0 0 36px;
+    letter-spacing: -0.015em;
+  }
+
+  .accent-rule {
+    width: 100%;
+    max-width: var(--max-content);
+    margin: 0 auto 48px;
+    height: 1px;
+    background: var(--color-border);
+  }
+
+  .section {
+    max-width: var(--max-content);
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  .section-band > .accent-rule + .section {
+    margin-top: 0;
+  }
+
+  /* ═══ RESPONSIVE ═══ */
+  @media (max-width: 640px) {
+    .hero-title { font-size: 1.6rem; }
+    .hero-overlay { padding: 60px 20px 50px; }
+    .canvas-strip { height: 90px; }
+    .props-grid { grid-template-columns: 1fr; }
+  }
+</style>

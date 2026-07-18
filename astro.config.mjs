@@ -32,21 +32,15 @@ function customRehypeLazyLoadImage() {
 
 export default defineConfig({
   site: 'https://jidalii.github.io',
-  integrations: [
-    sitemap(),
-    solid(),
-    partytown({ config: { forward: ["dataLayer.push"] } }),
-    expressiveCode({
-      plugins: [pluginLineNumbers(), pluginCollapsibleSections()],
-      themes: ["github-dark", "github-light"],
-      styleOverrides: {
-        codeFontFamily: "jetbrains-mono",
-        uiFontFamily: "jetbrains-mono",
-      },
-      themeCssSelector: (theme) => `[data-theme="${theme.type}"]`
-    }),
-    mdx(),
-  ],
+  integrations: [sitemap(), solid(), partytown({ config: { forward: ["dataLayer.push"] } }), expressiveCode({
+    plugins: [pluginLineNumbers(), pluginCollapsibleSections()],
+    themes: ["github-dark", "github-light"],
+    styleOverrides: {
+      codeFontFamily: "jetbrains-mono",
+      uiFontFamily: "jetbrains-mono",
+    },
+    themeCssSelector: (theme) => `[data-theme="${theme.type}"]`
+  }), mdx()],
   vite: {
     plugins: [tailwindcss()],
   },

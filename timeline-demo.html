@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Timeline Demo</title>
+<style>
+  /* ═══ RESET ═══ */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  /* ═══ DESIGN TOKENS ═══ */
+  :root {
+    --color-bg:          #F2F1ED;
+    --color-card:        #F5F2ED;
+    --color-border:      #DDD9D1;
+    --color-border-light:#E8E4DB;
+    --color-text-primary:#141311;
+    --color-text-secondary:#6B665E;
+    --color-text-tertiary:#9C9790;
+    --color-accent-yellow:#B8952E;
+    --color-accent-blue: #5C7090;
+    --color-accent-terracotta:#B8755E;
+    --color-dot-idle:    #D1CCC2;
+    --color-dot-active:  #B8952E;
+    --color-dot-ring:    rgba(184,149,46,0.18);
+    --font-display: 'Source Serif 4', Georgia, serif;
+    --font-body: 'Inter', -apple-system, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--color-bg);
+    color: var(--color-text-primary);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ═══ SECTION ═══ */
+  .section {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 80px 24px;
+  }
+  .section-label {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-text-tertiary);
+    margin-bottom: 8px;
+  }
+  .section-heading {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin-bottom: 48px;
+    letter-spacing: -0.015em;
+  }
+
+  /* ═══ TIMELINE ═══ */
+  .timeline {
+    position: relative;
+    padding-left: 0;
+  }
+
+  /* --- Vertical line --- */
+  .timeline-line {
+    position: absolute;
+    left: 0;
+    top: 8px;
+    bottom: 8px;
+    width: 1px;
+    background: var(--color-border);
+    transform-origin: top;
+    transform: scaleY(0);
+    transition: transform 1.2s var(--ease-out-expo);
+  }
+  .timeline-line.visible { transform: scaleY(1); }
+
+  /* --- Row --- */
+  .timeline-row {
+    position: relative;
+    padding: 24px 0 24px 36px;
+    border-bottom: 1px solid var(--color-border-light);
+    opacity: 0;
+    transform: translateY(18px);
+    transition:
+      opacity 0.6s var(--ease-out-expo),
+      transform 0.6s var(--ease-out-expo);
+  }
+  .timeline-row.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .timeline-row:last-child { border-bottom: none; }
+
+  /* --- Dot --- */
+  .timeline-dot-wrap {
+    position: absolute;
+    left: -4px;
+    top: 29px;
+    width: 10px;
+    height: 10px;
+  }
+  .timeline-dot {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: var(--color-dot-idle);
+    transform: scale(0.4);
+    transition:
+      background 0.5s var(--ease-out-expo),
+      transform 0.5s var(--ease-out-expo),
+      box-shadow 0.5s var(--ease-out-expo);
+  }
+  .timeline-row.visible .timeline-dot {
+    background: var(--color-dot-active);
+    transform: scale(1);
+    box-shadow: 0 0 0 8px var(--color-dot-ring);
+  }
+
+  /* --- Content --- */
+  .timeline-date {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--color-text-tertiary);
+    margin-bottom: 4px;
+    letter-spacing: 0.04em;
+  }
+
+  .timeline-role {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin-bottom: 2px;
+  }
+
+  .timeline-company {
+    font-size: 0.88rem;
+    color: var(--color-text-secondary);
+    margin-bottom: 10px;
+    position: relative;
+  }
+  .timeline-company a {
+    color: inherit;
+    text-decoration: none;
+    position: relative;
+  }
+  /* Underline animation on hover */
+  .timeline-company a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    width: 100%;
+    height: 1px;
+    background: var(--color-accent-blue);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.35s var(--ease-out-expo);
+  }
+  .timeline-company a:hover::after { transform: scaleX(1); }
+
+  .timeline-desc {
+    font-size: 0.84rem;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    list-style: none;
+    padding: 0;
+  }
+  .timeline-desc li {
+    position: relative;
+    padding-left: 16px;
+    margin-bottom: 5px;
+  }
+  .timeline-desc li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 9px;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--color-border);
+  }
+
+  /* --- Expand toggle --- */
+  .timeline-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.06em;
+    color: var(--color-text-tertiary);
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-top: 10px;
+    padding: 4px 0;
+    transition: color 0.25s;
+  }
+  .timeline-toggle:hover { color: var(--color-accent-blue); }
+  .timeline-toggle-arrow {
+    display: inline-block;
+    transition: transform 0.35s var(--ease-out-expo);
+    font-size: 0.55rem;
+  }
+  .timeline-toggle.open .timeline-toggle-arrow { transform: rotate(180deg); }
+
+  /* --- Expandable details --- */
+  .timeline-details {
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition:
+      max-height 0.45s var(--ease-out-expo),
+      opacity 0.35s var(--ease-out-expo),
+      margin 0.45s var(--ease-out-expo);
+    margin-top: 0;
+  }
+  .timeline-details.open {
+    max-height: 300px;
+    opacity: 1;
+    margin-top: 14px;
+  }
+  .timeline-details-inner {
+    font-size: 0.81rem;
+    color: var(--color-text-secondary);
+    line-height: 1.65;
+    background: var(--color-card);
+    border: 1px solid var(--color-border-light);
+    border-radius: 10px;
+    padding: 16px 18px;
+  }
+  .timeline-details-inner .tag {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.06em;
+    color: var(--color-accent-terracotta);
+    background: color-mix(in srgb, var(--color-accent-terracotta) 8%, transparent);
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-right: 6px;
+    margin-bottom: 6px;
+  }
+
+  /* ═══ RESPONSIVE ═══ */
+  @media (max-width: 640px) {
+    .section { padding: 48px 18px; }
+    .section-heading { font-size: 1.25rem; margin-bottom: 32px; }
+    .timeline-row { padding: 18px 0 18px 28px; }
+    .timeline-dot-wrap { left: -3px; top: 23px; width: 8px; height: 8px; }
+    .timeline-role { font-size: 1rem; }
+  }
+
+  /* ═══ SPACER (so we can scroll) ═══ */
+  .spacer { height: 50vh; display: flex; align-items: center; justify-content: center; color: var(--color-text-tertiary); font-family: var(--font-mono); font-size: 0.7rem; }
+</style>
+</head>
+<body>
+
+<div class="spacer">↓ scroll down to timeline ↓</div>
+
+<section class="section">
+  <p class="section-label">Experience &amp; Education</p>
+  <h2 class="section-heading">Where I've worked</h2>
+
+  <div class="timeline" id="timeline">
+    <div class="timeline-line" id="timeline-line"></div>
+
+    <!-- Row 1 -->
+    <div class="timeline-row">
+      <div class="timeline-dot-wrap"><div class="timeline-dot"></div></div>
+      <p class="timeline-date">2024 — Present</p>
+      <p class="timeline-role">Senior Backend Engineer</p>
+      <p class="timeline-company">
+        <a href="https://safe.global" target="_blank" rel="noopener">Safe</a> · Berlin, Germany
+      </p>
+      <ul class="timeline-desc">
+        <li>Built MPC-TSS signing infrastructure for Safe&#8202;{Wallet&#8202;}Native</li>
+        <li>Designed on-chain transaction indexing pipeline processing 500k+ events/day</li>
+        <li>Led migration of core signing service from Rust to Go, reducing p99 latency by 40%</li>
+      </ul>
+      <button class="timeline-toggle" data-row="0">
+        <span>Details</span>
+        <span class="timeline-toggle-arrow">▼</span>
+      </button>
+      <div class="timeline-details" data-row="0">
+        <div class="timeline-details-inner">
+          <span class="tag">Go</span><span class="tag">Rust</span><span class="tag">MPC</span><span class="tag">gRPC</span><span class="tag">PostgreSQL</span><span class="tag">Kafka</span>
+          <p style="margin-top:10px">Core contributor to the Safe{Wallet}Native backend. Owned the transaction relayer, keygen ceremony coordinator, and real-time event indexer. Worked directly with the CTO on architecture decisions.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 2 -->
+    <div class="timeline-row">
+      <div class="timeline-dot-wrap"><div class="timeline-dot"></div></div>
+      <p class="timeline-date">2022 — 2024</p>
+      <p class="timeline-role">Quantitative Developer</p>
+      <p class="timeline-company">
+        <a href="#" target="_blank" rel="noopener">QCP Capital</a> · Singapore
+      </p>
+      <ul class="timeline-desc">
+        <li>Built real-time options pricing engine handling 10k+ quotes/sec across Deribit, OKX, Binance</li>
+        <li>Developed volatility surface fitting models and automated hedging strategies</li>
+        <li>Designed low-latency order management system in Rust with sub-100μs tick-to-trade</li>
+      </ul>
+      <button class="timeline-toggle" data-row="1">
+        <span>Details</span>
+        <span class="timeline-toggle-arrow">▼</span>
+      </button>
+      <div class="timeline-details" data-row="1">
+        <div class="timeline-details-inner">
+          <span class="tag">Rust</span><span class="tag">Python</span><span class="tag">WebSocket</span><span class="tag">SQLite</span><span class="tag">Docker</span>
+          <p style="margin-top:10px">Built the firm's real-time market data ingestion and options pricing stack. Integrated with 5+ exchange APIs. The pricing engine reduced quote latency from 500μs to under 100μs, directly improving PnL on delta-one and vol-arb strategies.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 3 -->
+    <div class="timeline-row">
+      <div class="timeline-dot-wrap"><div class="timeline-dot"></div></div>
+      <p class="timeline-date">2020 — 2022</p>
+      <p class="timeline-role">Backend Engineer</p>
+      <p class="timeline-company">
+        <a href="#" target="_blank" rel="noopener">Binance</a> · Remote
+      </p>
+      <ul class="timeline-desc">
+        <li>Maintained spot trading matching engine serving 1.4M concurrent users</li>
+        <li>Built internal risk monitoring dashboard processing real-time order book snapshots</li>
+        <li>Optimized hot-path order validation, shaving 15μs off the critical path</li>
+      </ul>
+      <button class="timeline-toggle" data-row="2">
+        <span>Details</span>
+        <span class="timeline-toggle-arrow">▼</span>
+      </button>
+      <div class="timeline-details" data-row="2">
+        <div class="timeline-details-inner">
+          <span class="tag">Go</span><span class="tag">C++</span><span class="tag">Redis</span><span class="tag">Kafka</span><span class="tag">K8s</span>
+          <p style="margin-top:10px">Worked on the spot exchange's core trading infrastructure. Focused on order matching, risk checks, and the real-time monitoring pipeline. On-call rotation for production incidents affecting the matching engine.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 4 — Education -->
+    <div class="timeline-row">
+      <div class="timeline-dot-wrap"><div class="timeline-dot"></div></div>
+      <p class="timeline-date">2019 — 2020</p>
+      <p class="timeline-role">M.Sc. Computer Science</p>
+      <p class="timeline-company">
+        <a href="#" target="_blank" rel="noopener">Technical University of Munich</a> · Munich, Germany
+      </p>
+      <ul class="timeline-desc">
+        <li>Thesis: Byzantine Fault Tolerant State Machine Replication for Asset Custody</li>
+        <li>Focus: Distributed systems, cryptography, formal verification</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<div class="spacer">↑ timeline above ↑</div>
+
+<script>
+  (function() {
+    var line = document.getElementById('timeline-line');
+    var rows = document.querySelectorAll('.timeline-row');
+    var dots = document.querySelectorAll('.timeline-dot');
+    var toggles = document.querySelectorAll('.timeline-toggle');
+    var timeline = document.getElementById('timeline');
+
+    // --- Line reveal ---
+    var lineObserver = new IntersectionObserver(function(entries) {
+      if (entries[0].isIntersecting) {
+        line.classList.add('visible');
+        lineObserver.disconnect();
+      }
+    }, { threshold: 0.1 });
+    lineObserver.observe(timeline);
+
+    // --- Row stagger reveal ---
+    var rowObserver = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          var row = entry.target;
+          var index = parseInt(row.getAttribute('data-index') || '0');
+          // Stagger: each row appears after its predecessor
+          var delay = index * 120;
+          setTimeout(function() {
+            row.classList.add('visible');
+          }, delay);
+          rowObserver.unobserve(row);
+        }
+      });
+    }, { threshold: 0.2, rootMargin: '0px 0px -40px 0px' });
+
+    rows.forEach(function(row, i) {
+      row.setAttribute('data-index', String(i));
+      rowObserver.observe(row);
+    });
+
+    // --- Expand/collapse ---
+    toggles.forEach(function(toggle) {
+      toggle.addEventListener('click', function() {
+        var rowIdx = toggle.getAttribute('data-row');
+        var details = document.querySelector('.timeline-details[data-row="' + rowIdx + '"]');
+        var isOpen = toggle.classList.contains('open');
+
+        if (isOpen) {
+          toggle.classList.remove('open');
+          details.classList.remove('open');
+          toggle.querySelector('span:first-child').textContent = 'Details';
+        } else {
+          toggle.classList.add('open');
+          details.classList.add('open');
+          toggle.querySelector('span:first-child').textContent = 'Hide';
+        }
+      });
+    });
+
+    // --- Dot ring pulse on hover ---
+    rows.forEach(function(row) {
+      row.addEventListener('mouseenter', function() {
+        var dot = row.querySelector('.timeline-dot');
+        if (dot && row.classList.contains('visible')) {
+          dot.style.boxShadow = '0 0 0 14px var(--color-dot-ring)';
+        }
+      });
+      row.addEventListener('mouseleave', function() {
+        var dot = row.querySelector('.timeline-dot');
+        if (dot && row.classList.contains('visible')) {
+          dot.style.boxShadow = '0 0 0 8px var(--color-dot-ring)';
+        }
+      });
+    });
+  })();
+</script>
+
+</body>
+</html>

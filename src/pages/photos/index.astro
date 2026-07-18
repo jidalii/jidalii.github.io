@@ -1,22 +1,18 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
-import { getImageDims } from '../../utils/image-dims';
+import { getPhoto, getPhotoFsPath } from '../../utils/photo-assets';
 import { bgColor } from '../../utils/color-extract';
-import path from 'node:path';
 
 const photoData = await getCollection('photos');
 const rawSeries = photoData[0]?.data?.series || [];
-const root = process.cwd();
 
-// Auto-detect cover dimensions + extract bg colors in parallel
+// Auto-detect cover dimensions (from asset metadata) + extract bg colors in parallel
 const allSeries = await Promise.all(rawSeries.map(async (s) => {
-  const filePath = path.join(root, 'public', s.cover);
-  const [dims, bg] = await Promise.all([
-    getImageDims(filePath).catch(() => ({ width: 1920, height: 1080 })),
-    bgColor(filePath).catch(() => '#bdbab1'),
-  ]);
-  return { ...s, coverW: dims.width, coverH: dims.height, bg };
+  const meta = getPhoto(s.cover);
+  const bg = await bgColor(getPhotoFsPath(s.cover)).catch(() => '#bdbab1');
+  return { ...s, coverMeta: meta, coverW: meta.width, coverH: meta.height, bg };
 }));
 
 // Sort: landscapes (coverW > coverH) → single rows, portraits → pair rows
@@ -65,7 +61,16 @@ function slugify(path: string) { const parts = path.split('/'); const dir = part
         >
           {row.series.map((s, i) => (
             <a class="photo-inner" href={`/photos/${slugify(s.cover)}`} style="text-decoration:none">
-              <img src={s.cover} alt={s.title} loading="lazy" />
+              <Image
+                src={s.coverMeta}
+                alt={s.title}
+                width={row.type === 'pair' ? 640 : 1280}
+                densities={[1, 1.5]}
+                format="webp"
+                quality={82}
+                loading="lazy"
+                decoding="async"
+              />
               <span class="photo-caption" style={`color:${row.textColors[i]}`}>{s.title}</span>
             </a>
           ))}
@@ -79,13 +84,13 @@ function slugify(path: string) { const parts = path.split('/'); const dir = part
 <style>
   .page-header { max-width: var(--max-content); margin: 0 auto 56px; padding: 0 28px; }
   .photo-row { width: 100%; padding: 60px 28px; display: flex; justify-content: center; align-items: center; }
-  .photo-row img { display: block; border-radius: 4px; transition: transform .4s var(--ease-out-expo); object-fit: contain; }
-  .photo-row:hover img { transform: scale(1.01); }
+  .photo-row :global(img) { display: block; border-radius: 4px; transition: transform .4s var(--ease-out-expo); object-fit: contain; }
+  .photo-row:hover :global(img) { transform: scale(1.01); }
   .photo-inner { text-decoration: none; color: inherit; }
   .photo-row.single .photo-inner { max-width: 980px; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 50vh; }
-  .photo-row.single img { width: 100%; height: auto; max-height: 65vh; }
+  .photo-row.single :global(img) { width: 100%; height: auto; max-height: 65vh; }
   .photo-row.pair .photo-inner { width: 50%; max-width: 480px; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 40vh; margin: 0 auto; }
-  .photo-row.pair img { width: 100%; height: auto; max-height: 55vh; }
+  .photo-row.pair :global(img) { width: 100%; height: auto; max-height: 55vh; }
   .photo-caption { margin-top: 14px; font-family: var(--font-mono); font-size: .7rem; color: var(--color-text-secondary); letter-spacing: .04em; opacity: .6; text-align: center; }
   @media(max-width:768px){ .photo-row { padding: 32px 16px; } .photo-row.pair { flex-direction: column; gap: 24px; } .photo-row.pair .photo-inner { width: 100%; max-width: 100%; } .photo-row.single .photo-inner { min-height: 30vh; } .photo-row.pair .photo-inner { min-height: 25vh; } }
 </style>

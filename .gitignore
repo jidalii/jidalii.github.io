@@ -4,6 +4,7 @@ dist/
 .astro/
 .vscode
 .idea
+.claude
 
 # dependencies
 node_modules/

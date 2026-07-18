@@ -6,8 +6,8 @@ import GlyphMatrix from '../components/GlyphMatrix.astro';
 import { getCollection } from 'astro:content';
 
 const photoCollection = await getCollection('photos');
-const expData = await getCollection('experience');
-const jobs = (expData[0]?.data?.jobs || []).sort((a, b) => {
+import experienceData from '../data/experience.json';
+const jobs = (experienceData?.jobs || []).sort((a, b) => {
   if (a.end === 'Present') return -1;
   if (b.end === 'Present') return 1;
   return b.start.localeCompare(a.start);
@@ -24,24 +24,53 @@ const jobs = (expData[0]?.data?.jobs || []).sort((a, b) => {
   </div>
 
   <div class="section-band band-cool" style="padding-top:60px">
-    <div class="accent-rule"></div>
-    <section class="section reveal">
+    <div class="section" style="max-width:var(--max-content);margin:0 auto;padding:0 24px">
       <p class="section-label">Experience &amp; Education</p>
       <h2 class="section-heading">Where I've worked</h2>
       <p style="color:var(--color-text-secondary);max-width:540px;margin-top:-28px;margin-bottom:44px;font-size:.95rem">Building low-latency blockchain infrastructure, secure backend systems, and data pipelines across trading, research, and protocol environments.</p>
-      <div class="timeline">
-        {jobs.map(job => (
-          <div class="timeline-item">
+
+      <div class="timeline" id="timeline">
+        <!-- 1. Scroll-linked vertical line -->
+        <div class="timeline-line" id="timeline-line"></div>
+
+        {jobs.map((job, i) => (
+          <div class="timeline-row" data-index={String(i)}>
+            <div class="timeline-dot-wrap"><div class="timeline-dot"></div></div>
             <p class="timeline-date">{job.start} — {job.end}</p>
             <p class="timeline-role">{job.role}</p>
-            <p class="timeline-company">{job.url ? <a href={job.url} target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--color-accent-blue)">{job.company}</a> : job.company} · {job.location}</p>
-            <ul class="timeline-desc">
-              {job.highlights.map(h => <li>{h}</li>)}
-            </ul>
+            <p class="timeline-company">
+              {job.url
+                ? <a href={job.url} target="_blank" rel="noopener">{job.company}</a>
+                : job.company
+              } · {job.location}
+            </p>
+            {job.summary && (
+              <p class="timeline-summary">{job.summary}</p>
+            )}
+            {job.technologies && job.technologies.length > 0 && (
+              <ul class="timeline-tags" aria-label="Technologies">
+                {job.technologies.map(t => <li>{t}</li>)}
+              </ul>
+            )}
+            {job.highlights && job.highlights.length > 0 && (
+              <>
+                <button class="timeline-toggle" data-row={String(i)}>
+                  <span>Selected work</span>
+                  <span class="timeline-toggle-arrow">▼</span>
+                </button>
+                <div class="timeline-details" data-row={String(i)}>
+                  <div class="timeline-details-inner">
+                    <ul class="timeline-desc">
+                      {job.highlights.map(h => <li>{h}</li>)}
+                    </ul>
+                  </div>
+                </div>
+              </>
+            )}
           </div>
         ))}
       </div>
-    </section>
+    </div>
   </div>
 
   <div class="band-dither dither-cool-warm">
@@ -65,14 +94,285 @@ const jobs = (expData[0]?.data?.jobs || []).sort((a, b) => {
   .dither-warm-cool{background-color:var(--color-band-warm)}
   .dither-cool-warm{background-color:var(--color-band-cool)}
 
-  /* ═══ EXPERIENCE TIMELINE ═══ */
-  .timeline{position:relative;padding-left:32px}
-  .timeline::before{content:'';position:absolute;left:0;top:4px;bottom:4px;width:1px;background:var(--color-border)}
-  .timeline-item{position:relative;padding-bottom:40px}
-  .timeline-item:last-child{padding-bottom:0}
-  .timeline-item::before{content:'';position:absolute;left:-36px;top:6px;width:10px;height:10px;border-radius:50%;background:var(--color-accent-yellow);box-shadow:0 0 0 4px color-mix(in srgb,var(--color-accent-yellow) 15%,transparent)}
-  .timeline-date{font-family:var(--font-mono);font-size:.7rem;color:var(--color-text-tertiary);margin-bottom:4px}
-  .timeline-role{font-family:var(--font-display);font-size:1.1rem;font-weight:500;color:var(--color-text-primary);margin-bottom:2px}
-  .timeline-company{font-size:.85rem;color:var(--color-text-secondary);margin-bottom:8px}
-  .timeline-desc{font-size:.82rem;color:var(--color-text-secondary);line-height:1.6;list-style:disc;padding-left:16px}
+  /* ── Section label/heading ── */
+  .section-label {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-text-tertiary);
+    margin-bottom: 8px;
+  }
+  .section-heading {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin-bottom: 36px;
+    letter-spacing: -0.015em;
+  }
+
+  /* ═══ TIMELINE ═══ */
+  .timeline { position: relative; }
+
+  /* ── Vertical line ── */
+  .timeline-line {
+    position: absolute;
+    left: 0;
+    top: 8px;
+    bottom: 8px;
+    width: 1px;
+    background: var(--color-border);
+    transform-origin: top;
+    transform: scaleY(0);
+    transition: transform 0.4s ease-out;
+  }
+  .timeline-line.visible { transform: scaleY(1); transition-duration: 1.2s; }
+
+  /* ── Row ── */
+  .timeline-row {
+    position: relative;
+    padding: 22px 0 22px 36px;
+    border-bottom: none;
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .timeline-row.visible { opacity: 1; transform: translateY(0); }
+  .timeline-row:last-child { border-bottom: none; }
+
+  /* ── Dot ── */
+  .timeline-dot-wrap {
+    position: absolute;
+    left: -4px;
+    top: 27px;
+    width: 10px;
+    height: 10px;
+  }
+  .timeline-dot {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: #D1CCC2;
+    transform: scale(0.4);
+    transition: background 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .timeline-row.visible .timeline-dot {
+    background: #6B665E;
+    transform: scale(1);
+  }
+
+  /* ── Company underline ── */
+  .timeline-company a {
+    color: inherit;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .timeline-company a:hover {
+    border-bottom-color: var(--color-accent-blue);
+  }
+
+  /* ── Typography ── */
+  .timeline-date {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--color-text-tertiary);
+    margin-bottom: 4px;
+    letter-spacing: 0.04em;
+  }
+  .timeline-role {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--color-text-primary);
+    margin-bottom: 2px;
+  }
+  .timeline-company {
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+    margin-bottom: 10px;
+  }
+  /* ── Summary ── */
+  .timeline-summary {
+    font-size: 0.88rem;
+    color: #4D4944;
+    line-height: 1.6;
+    max-width: 36rem;
+    margin: 0 0 12px;
+  }
+
+  /* ── Tech tags ── */
+  .timeline-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 12px;
+    list-style: none;
+    padding: 0;
+    margin: 0 0 12px;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--color-text-tertiary);
+  }
+
+  .timeline-desc {
+    font-size: 0.82rem;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .timeline-desc li {
+    position: relative;
+    padding-left: 15px;
+    margin-bottom: 4px;
+  }
+  .timeline-desc li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 9px;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: #D1CCC2;
+  }
+
+  /* ── Collapsible expand toggle ── */
+  .timeline-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-family: var(--font-body);
+    font-size: 0.78rem;
+    font-weight: 450;
+    letter-spacing: 0.01em;
+    color: var(--color-accent-blue);
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-top: 10px;
+    padding: 5px 0;
+    transition: color 0.25s;
+  }
+  .timeline-toggle:hover { color: var(--color-accent-blue-hov); }
+  .timeline-toggle-arrow {
+    display: inline-block;
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    font-size: 0.65rem;
+  }
+  .timeline-toggle.open .timeline-toggle-arrow { transform: rotate(180deg); }
+
+  /* ── Collapsible panel ── */
+  .timeline-details {
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition: max-height 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+                opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+                margin 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+    margin-top: 0;
+  }
+  .timeline-details.open { max-height: 500px; opacity: 1; margin-top: 12px; }
+  .timeline-details-inner {
+    font-size: 0.81rem;
+    color: var(--color-text-secondary);
+    line-height: 1.65;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 640px) {
+    .timeline-row { padding: 16px 0 16px 26px; }
+    .timeline-dot-wrap { left: -3px; top: 21px; width: 8px; height: 8px; }
+    .timeline-role { font-size: 1rem; }
+    .section-heading { font-size: 1.25rem; }
+  }
+
+  /* keep band-* alive for other pages */
+  .band-warm{background:var(--color-band-warm)}
+  .band-cool{background:var(--color-band-cool)}
 </style>
+
+<script>
+  // ═══════════════════════════════════════════════
+  // Primitive 1 — whileInView: reveal rows on scroll
+  // ═══════════════════════════════════════════════
+  (function whileInView() {
+    var rows = document.querySelectorAll('.timeline-row');
+    if (!rows.length) return;
+
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          var row = entry.target;
+          var index = parseInt(row.getAttribute('data-index') || '0');
+          // Stagger each row 120ms apart
+          setTimeout(function() { row.classList.add('visible'); }, index * 120);
+          observer.unobserve(row);
+        }
+      });
+    }, { threshold: 0.2, rootMargin: '0px 0px -40px 0px' });
+
+    rows.forEach(function(row) { observer.observe(row); });
+  })();
+
+  // ═══════════════════════════════════════════════
+  // Primitive 2 — useScroll → useTransform: animate line
+  // ═══════════════════════════════════════════════
+  (function scrollTimeline() {
+    var line = document.getElementById('timeline-line');
+    var timeline = document.getElementById('timeline');
+    if (!line || !timeline) return;
+
+    function updateLine() {
+      var rect = timeline.getBoundingClientRect();
+      var viewH = window.innerHeight;
+      // How far the timeline top has scrolled above the viewport bottom
+      var progress = (viewH - rect.top) / (viewH + rect.height);
+      progress = Math.max(0, Math.min(1, progress));
+      line.style.transform = 'scaleY(' + progress + ')';
+    }
+
+    // Show the line immediately if already visible
+    updateLine();
+    if (parseFloat(line.style.transform.replace('scaleY(', '')) > 0) {
+      line.classList.add('visible');
+    }
+
+    var ticking = false;
+    window.addEventListener('scroll', function() {
+      if (!ticking) {
+        requestAnimationFrame(function() {
+          updateLine();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }, { passive: true });
+  })();
+
+  // ═══════════════════════════════════════════════
+  // Primitive 3 — Collapsible: expand/collapse details
+  // ═══════════════════════════════════════════════
+  (function collapsible() {
+    document.querySelectorAll('.timeline-toggle').forEach(function(toggle) {
+      toggle.addEventListener('click', function() {
+        var rowIdx = toggle.getAttribute('data-row');
+        var details = document.querySelector('.timeline-details[data-row="' + rowIdx + '"]');
+        var isOpen = toggle.classList.contains('open');
+
+        if (isOpen) {
+          toggle.classList.remove('open');
+          details.classList.remove('open');
+          toggle.querySelector('span:first-child').textContent = 'Details';
+        } else {
+          toggle.classList.add('open');
+          details.classList.add('open');
+          toggle.querySelector('span:first-child').textContent = 'Hide';
+        }
+      });
+    });
+  })();
+</script>

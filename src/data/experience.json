@@ -1,0 +1,87 @@
+{
+  "jobs": [
+    {
+      "company": "Presto Labs",
+      "role": "Blockchain Engineer",
+      "location": "Shanghai",
+      "start": "2025-06",
+      "end": "2026-07",
+      "url": "https://www.prestolabs.io/",
+      "summary": "Built low-latency MPC signing, market-data relay, and DeFi trading infrastructure for on-chain execution.",
+      "technologies": [
+        "Go",
+        "Rust",
+        "C++",
+        "Python",
+        "Solana",
+        "EVM",
+        "gRPC"
+      ],
+      "highlights": [
+        "Built production MPC signing infrastructure for Solana Ed25519 and EVM secp256k1",
+        "Developed REST/gRPC trading infrastructure across 10+ DeFi venues",
+        "Maintained Hyperliquid nodes with feed relay and NGINX auto-failover",
+        "Built CME market-data relay reducing downstream latency by 10ms"
+      ]
+    },
+    {
+      "company": "CASP Research Lab, Boston University",
+      "role": "Research Assistant",
+      "location": "Boston, MA",
+      "start": "2024-09",
+      "end": "2025-05",
+      "url": "https://www.bu.edu/cds-faculty/profile/ioannis-ioannis-liagouris/",
+      "summary": "Developed secure document-processing and privacy-preserving data infrastructure for Massachusetts workforce research.",
+      "technologies": [
+        "Python",
+        "OpenCV",
+        "MPC",
+        "Streamlit",
+        "Docker"
+      ],
+      "highlights": [
+        "Supported analysis of 838K+ workforce records for the 2025 Workforce Data Report.",
+        "Built OCR components achieving 99%+ extraction accuracy.",
+        "Developed an interface for MPC-protected aggregate queries."
+      ]
+    },
+    {
+      "company": "Neo Smart Economy",
+      "role": "Backend Engineer Intern",
+      "location": "Shanghai",
+      "start": "2024-05",
+      "end": "2024-08",
+      "url": "https://neo.org",
+      "summary": "Optimized production backend infrastructure and smart contracts for the NeoX blockchain ecosystem.",
+      "technologies": [
+        "Go",
+        "Redis",
+        "MySQL",
+        "Solidity",
+        "Docker"
+      ],
+      "highlights": [
+        "Optimized Go/Gin faucet with connection pooling (3× throughput, 40ms latency)",
+        "Integrated reCAPTCHA v3, Redis cooldowns, and token-bucket rate limiting (99% blocked)",
+        "Applied Cache Aside and Singleflight to reduce MySQL load by 40%"
+      ]
+    },
+    {
+      "company": "Boston University",
+      "role": "B.A. in Computer Science",
+      "location": "Boston, MA",
+      "start": "2021-09",
+      "end": "2025-05",
+      "url": "https://www.bu.edu",
+      "summary": "GPA 3.93/4.00. Focused on distributed systems, cryptography.",
+      "technologies": [
+        "Distributed Systems",
+        "Cryptography",
+        "Computer Networks",
+        "ML",
+        "Compilers",
+        "Algorithm Analysis"
+      ]
+    }
+  ]
+}

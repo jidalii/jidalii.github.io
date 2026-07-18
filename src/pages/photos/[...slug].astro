@@ -1,8 +1,9 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
+import { getPhoto, getPhotoFsPath } from '../../utils/photo-assets';
 import { bgColor } from '../../utils/color-extract';
-import path from 'node:path';
 
 export async function getStaticPaths() {
   const slugify = (p: string) => {
@@ -12,7 +13,6 @@ export async function getStaticPaths() {
   };
   const photoData = await getCollection('photos');
   const allSeries = photoData[0]?.data?.series || [];
-  const root = process.cwd();
 
   // Build all path entries + start color extraction in parallel
   const entries: Array<{ params: { slug: string }; props: any; filePath: string }> = [];
@@ -22,7 +22,7 @@ export async function getStaticPaths() {
       entries.push({
         params: { slug: slugify(photo) },
         props: { series: s, photoIdx: i, allSeries, bgColor: '' },
-        filePath: path.join(root, 'public', photo),
+        filePath: getPhotoFsPath(photo),
       });
     }
   }
@@ -66,7 +66,18 @@ const nextPhoto = photos[nextIdx];
       </button>
 
       <div class="photo-main">
-        <img id="main-photo" src={currentPhoto} alt={series.title} data-bg={bgColor} />
+        <Image
+          id="main-photo"
+          src={getPhoto(currentPhoto)}
+          alt={series.title}
+          data-bg={bgColor}
+          width={1600}
+          densities={[1, 1.5]}
+          format="webp"
+          quality={85}
+          loading="eager"
+          decoding="async"
+        />
         <div class="photo-info">
           <span id="photo-title" class="photo-title" style={`color:${textColor}`}>{series.title}</span>
           <span id="photo-counter" class="photo-counter" style={`color:${mutedColor}`}>{photoIdx + 1} / {photos.length}</span>
@@ -97,6 +108,10 @@ const nextPhoto = photos[nextIdx];
       var newImg = doc.getElementById('main-photo');
       if (newImg) {
         img.src = newImg.src;
+        // srcset must be swapped too — otherwise the old candidate list wins over src
+        var newSrcset = newImg.getAttribute('srcset');
+        if (newSrcset) img.setAttribute('srcset', newSrcset);
+        else img.removeAttribute('srcset');
         img.alt = newImg.alt;
         // Update background + text colors from fetched bg
         var newBg = newImg.getAttribute('data-bg');
@@ -178,7 +193,7 @@ const nextPhoto = photos[nextIdx];
 <style>
   .photo-viewer { display: flex; align-items: center; justify-content: center; width: 100%; min-height: 100vh; padding: 80px 0; }
   .photo-main { display: flex; flex-direction: column; align-items: center; max-width: 90vw; max-height: 85vh; }
-  .photo-main img { max-width: 90vw; max-height: 75vh; object-fit: contain; border-radius: 4px; }
+  .photo-main :global(img) { max-width: 90vw; max-height: 75vh; object-fit: contain; border-radius: 4px; }
   .photo-info { display: flex; align-items: center; gap: 16px; margin-top: 20px; }
   .photo-title { font-family: var(--font-display); font-size: 1.1rem; color: var(--color-text-primary); }
   .photo-counter { font-family: var(--font-mono); font-size: .75rem; color: var(--color-text-tertiary); }
@@ -186,5 +201,5 @@ const nextPhoto = photos[nextIdx];
   .photo-arrow:hover { color: var(--color-accent-yellow) !important; background: color-mix(in srgb, var(--color-accent-yellow) 8%, transparent); }
   .photo-arrow-left { left: 16px; }
   .photo-arrow-right { right: 16px; }
-  @media(max-width:768px){ .photo-arrow { width: 48px; height: 48px; font-size: 1.2rem; } .photo-arrow-left { left: 8px; } .photo-arrow-right { right: 8px; } .photo-main img { max-width: 85vw; max-height: 65vh; } }
+  @media(max-width:768px){ .photo-arrow { width: 48px; height: 48px; font-size: 1.2rem; } .photo-arrow-left { left: 8px; } .photo-arrow-right { right: 8px; } .photo-main :global(img) { max-width: 85vw; max-height: 65vh; } }
 </style>

@@ -23,6 +23,7 @@ const id = 'et-' + Math.random().toString(36).slice(2, 8);
     for (var i = 0; i < chars.length; i++) {
       current[i] = chars[i] === ' ' ? ' ' : randChar();
     }
+    
 
     function render() {
       el.textContent = current.join('');

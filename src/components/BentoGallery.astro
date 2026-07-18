@@ -1,4 +1,7 @@
 ---
+import { Image } from 'astro:assets';
+import { getPhoto } from '../utils/photo-assets';
+
 const { photos: photoData } = Astro.props;
 const series = photoData[0]?.data?.series || [];
 const items = series.map(s => ({ image: s.cover, title: s.title })).slice(0, 6);
@@ -68,8 +71,22 @@ const cells = [...autoCells, ctaCell];
     );
     if (cell.type === 'empty') return <div class="bento-gallery-item"></div>;
     return (
-      <div class="bento-gallery-item">
-        <img src={cell.image} alt={cell.alt} loading="lazy" />
+      <div class="bento-gallery-item photo-item">
+        <Image
+          src={getPhoto(cell.image)}
+          alt={cell.alt}
+          width={400}
+          densities={[1, 2]}
+          format="webp"
+          quality={75}
+          loading="lazy"
+          decoding="async"
+        />
+        <div class="bento-blur-overlay">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <div class="bento-blur-layer" style={`--blur:${(i * 0.25).toFixed(2)}px;--i:${i};--n:8`}></div>
+          ))}
+        </div>
         {cell.title && <span class="bento-gallery-caption">{cell.title}</span>}
       </div>
     );
@@ -90,19 +107,42 @@ const cells = [...autoCells, ctaCell];
   }
   .gallery-cta{grid-column:4;grid-row:3;background:#9BAFAC}
   .bento-gallery-item:not(.gallery-cta):hover{background:#d3ded2}
-  .bento-gallery-item:has(img):hover{background:transparent;transition:background 1s cubic-bezier(0.16,1,0.3,1)}
-  .bento-gallery-item img{
+  .photo-item:hover{background:transparent}
+  .bento-gallery-item :global(img){
     width:100%;height:100%;object-fit:cover;
     transition:transform .6s var(--ease-out-expo);
   }
-  .bento-gallery-item:hover img{transform:scale(1.04)}
-  .bento-gallery-caption{
-    position:absolute;bottom:0;left:0;right:0;padding:20px 24px;
-    background:linear-gradient(to top,rgba(0,0,0,.5),transparent);
-    color:#F0EDE7;font-size:.78rem;font-weight:500;
-    opacity:0;transform:translateY(8px);transition:opacity .3s,transform .3s;
+  .photo-item:hover > :global(img){transform:scale(1.04)}
+
+  /* ── Progressive blur overlay ── */
+  .bento-blur-overlay{
+    position:absolute;inset:0;overflow:hidden;
+    opacity:0;transition:opacity .3s ease-out;
+    pointer-events:none;
   }
-  .bento-gallery-item:hover .bento-gallery-caption{opacity:1;transform:translateY(0)}
+  .photo-item:hover .bento-blur-overlay{opacity:1}
+
+  .bento-blur-layer{
+    position:absolute;inset:0;
+    backdrop-filter:blur(var(--blur,0px));
+    -webkit-backdrop-filter:blur(var(--blur,0px));
+    --seg:calc(1 / (var(--n) + 1));
+    --s1:calc(var(--i) * var(--seg) * 100%);
+    --s2:calc((var(--i) + 1) * var(--seg) * 100%);
+    --s3:calc((var(--i) + 2) * var(--seg) * 100%);
+    --s4:calc((var(--i) + 3) * var(--seg) * 100%);
+    -webkit-mask-image:linear-gradient(to top,transparent var(--s1),black var(--s2),black var(--s3),transparent var(--s4));
+    mask-image:linear-gradient(to top,transparent var(--s1),black var(--s2),black var(--s3),transparent var(--s4));
+  }
+
+  .bento-gallery-caption{
+    position:absolute;bottom:0;left:0;right:0;padding:16px 20px;
+    color:#fff;font-size:.78rem;font-weight:500;
+    text-shadow:0 1px 3px rgba(0,0,0,.4);
+    opacity:0;transform:translateY(8px);
+    transition:opacity .3s var(--ease-out-expo),transform .3s var(--ease-out-expo);
+  }
+  .photo-item:hover .bento-gallery-caption{opacity:1;transform:translateY(0)}
   .gallery-cta{display:flex;align-items:center;justify-content:center}
   .gallery-cta-link{display:flex;flex-direction:column;align-items:center;gap:10px;text-decoration:none}
   .gallery-cta-label{color:#F0EDE7;font-size:.82rem;font-weight:450}

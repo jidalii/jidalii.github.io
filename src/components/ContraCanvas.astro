@@ -1,0 +1,174 @@
+---
+const {
+  dotColor = 'rgba(242, 241, 237, 0.72)',
+  bgColor = 'transparent',
+  gap = 11,
+  speed = 1.0,
+  density = 1.0,
+  className,
+} = Astro.props;
+
+const id = 'cc-' + Math.random().toString(36).slice(2, 8);
+---
+
+<div
+  id={`${id}-wrap`}
+  class={className}
+  style="position:relative;width:100%;height:100%;overflow:hidden"
+>
+  <canvas
+    id={id}
+    data-dot-color={dotColor}
+    data-bg-color={bgColor}
+    data-gap={String(gap)}
+    data-speed={String(speed)}
+    data-density={String(density)}
+    style="display:block;width:100%;height:100%"
+    aria-hidden="true"
+  ></canvas>
+</div>
+
+<script define:vars={{ id }}>
+  (function() {
+    var canvas = document.getElementById(id);
+    if (!canvas) return;
+    var ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    var wrapper = document.getElementById(id + '-wrap');
+
+    var dotColor = canvas.dataset.dotColor || 'rgba(242, 241, 237, 0.72)';
+    var bgColor = canvas.dataset.bgColor || 'transparent';
+    var gap = parseInt(canvas.dataset.gap) || 11;
+    var speed = parseFloat(canvas.dataset.speed) || 1.0;
+    var density = parseFloat(canvas.dataset.density) || 1.0;
+
+    var frame = 0;
+    var animationId = 0;
+    var stopped = false;
+    var cw = 0, ch = 0;
+    var dpr = 1;
+
+    function resize(w, h) {
+      dpr = window.devicePixelRatio || 1;
+      canvas.width = Math.floor(w * dpr);
+      canvas.height = Math.floor(h * dpr);
+      canvas.style.width = w + 'px';
+      canvas.style.height = h + 'px';
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      cw = w;
+      ch = h;
+    }
+
+    function hexToRgba(hex) {
+      // Parse hex color to rgba components for manipulation
+      var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+      if (result) {
+        return {
+          r: parseInt(result[1], 16),
+          g: parseInt(result[2], 16),
+          b: parseInt(result[3], 16),
+        };
+      }
+      return null;
+    }
+
+    function parseColor(colorStr) {
+      // Handle both rgba(...) and hex colors
+      var rgba = /rgba?\((\d+),\s*(\d+),\s*(\d+),\s*([\d.]+)\)/.exec(colorStr);
+      if (rgba) {
+        return { r: +rgba[1], g: +rgba[2], b: +rgba[3], a: +rgba[4] };
+      }
+      var hex = hexToRgba(colorStr);
+      if (hex) return { r: hex.r, g: hex.g, b: hex.b, a: 1 };
+      return { r: 242, g: 241, b: 237, a: 0.72 };
+    }
+
+    var baseDot = parseColor(dotColor);
+
+    function draw() {
+      if (stopped || cw === 0 || ch === 0) return;
+
+      // Use CSS logical dimensions for crisp rendering
+      var width = cw;
+      var height = ch;
+
+      ctx.clearRect(0, 0, width * dpr, height * dpr);
+
+      if (bgColor !== 'transparent') {
+        ctx.fillStyle = bgColor;
+        ctx.fillRect(0, 0, width, height);
+      }
+
+      var time = frame * 0.012 * speed;
+      var effectiveGap = Math.max(4, Math.round(gap / density));
+
+      for (var y = -effectiveGap; y < height + effectiveGap; y += effectiveGap) {
+        for (var x = -effectiveGap; x < width + effectiveGap; x += effectiveGap) {
+          var nx = x / width;
+          var ny = y / height;
+
+          var wave1 = Math.sin(nx * 9 + time * 1.4);
+          var wave2 = Math.cos(ny * 7 - time * 1.1);
+          var wave3 = Math.sin((nx + ny) * 8 + time);
+
+          var field = (wave1 + wave2 + wave3) / 3;
+
+          var centerBias = 1 - Math.min(1, Math.hypot(nx - 0.5, ny - 0.52) * 1.65);
+
+          var noise = Math.sin(x * 0.07 + y * 0.05 + time * 3);
+          var alpha = Math.max(0, field * 0.55 + centerBias * 0.75 + noise * 0.08);
+
+          if (alpha < 0.22) continue;
+
+          var radius = (0.7 + alpha * 2.4) * dpr;
+          var clampedAlpha = Math.min(alpha, 0.85) * baseDot.a;
+
+          ctx.beginPath();
+          ctx.fillStyle = 'rgba(' + baseDot.r + ',' + baseDot.g + ',' + baseDot.b + ',' + clampedAlpha + ')';
+          ctx.arc(x * dpr, y * dpr, radius, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      frame++;
+      animationId = requestAnimationFrame(draw);
+    }
+
+    // Initial size from wrapper
+    var rect = wrapper.getBoundingClientRect();
+    if (rect.width > 0 && rect.height > 0) {
+      resize(rect.width, rect.height);
+    }
+
+    draw();
+
+    var ro = new ResizeObserver(function(entries) {
+      for (var i = 0; i < entries.length; i++) {
+        var w = entries[i].contentRect.width;
+        var h = entries[i].contentRect.height;
+        if (w > 0 && h > 0) { resize(w, h); }
+      }
+    });
+    ro.observe(wrapper);
+
+    // Cleanup via MutationObserver — stop if the canvas is removed from DOM
+    var mo = new MutationObserver(function(mutations) {
+      for (var i = 0; i < mutations.length; i++) {
+        var removed = mutations[i].removedNodes;
+        for (var j = 0; j < removed.length; j++) {
+          if (removed[j] === canvas || removed[j] === wrapper) {
+            stopped = true;
+            cancelAnimationFrame(animationId);
+            ro.disconnect();
+            mo.disconnect();
+            return;
+          }
+        }
+      }
+    });
+    if (wrapper.parentElement) {
+      mo.observe(wrapper.parentElement, { childList: true });
+    }
+  })();
+</script>

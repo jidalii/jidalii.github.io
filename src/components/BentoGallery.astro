@@ -59,7 +59,7 @@ const cells = [...autoCells, ctaCell];
     <h2 class="section-heading">Photos</h2>
   </div>
 </div>
-<div class="bento-gallery" style="background:var(--color-band-warm)">
+<div class="bento-gallery" style="background:var(--color-band-warm) var(--grain-texture);background-size:256px 256px;background-blend-mode:soft-light">
   {cells.map(cell => {
     if (cell.type === 'cta') return (
       <div class="bento-gallery-item gallery-cta">

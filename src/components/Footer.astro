@@ -12,9 +12,10 @@
 
 <style>
   .site-footer {
-    background: var(--color-ink) var(--grain-texture);
-    background-size: 256px 256px;
-    background-blend-mode: soft-light;
+    /* above the body::after grain overlay (z-index 9999) — flat ink, no grain */
+    position: relative;
+    z-index: 10000;
+    background: var(--color-ink);
     padding: 36px 0;
   }
   .foot-inner {

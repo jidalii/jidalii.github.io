@@ -36,8 +36,8 @@
   --max-reading:  680px;
   --max-content:  1080px;
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
-  /* neutral film grain tile — applied per-band so photos stay pristine */
-  --grain-texture: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+  /* neutral film grain tile — tiled by the body::after global overlay below */
+  --grain-texture: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncR type='linear' slope='1.6' intercept='-0.3'/%3E%3CfeFuncG type='linear' slope='1.6' intercept='-0.3'/%3E%3CfeFuncB type='linear' slope='1.6' intercept='-0.3'/%3E%3CfeFuncA type='linear' slope='4' intercept='0'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
 /* ═══ GLOBAL RESETS ═══ */
@@ -49,6 +49,18 @@ body{
   color:var(--color-text-primary);
   line-height:1.6;
   transition:background .4s,color .4s;
+}
+
+/* ═══ FILM GRAIN OVERLAY — fixed layer above all content (contralabs-style) ═══ */
+/* opacity is the strength knob (.08–.15); background-size is the fineness knob */
+body::after{
+  content:'';
+  position:fixed;inset:0;
+  z-index:9999;
+  pointer-events:none;
+  background-image:var(--grain-texture);
+  background-size:256px 256px;
+  opacity:.1;
 }
 
 

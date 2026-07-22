@@ -110,9 +110,9 @@ band 背景层之上，因此 bento 里的照片不受颗粒影响。tile 由 to
 | 参数 | 值 | 原因 |
 |------|-----|------|
 | `feColorMatrix saturate 0` | 去色 | 彩色噪点会污染低饱和的 Morandi 色板；中性颗粒才是"胶片感" |
-| `baseFrequency` | 0.9 | 细颗粒（0.75 偏粗糙） |
+| `baseFrequency` | 0.78 | 细颗粒中略带有机感（参考 contralabs 的纸面质感；0.9 过细、0.6 太噪） |
 | `numOctaves` | 2 | 越少越细腻 |
-| rect `opacity` | 0.55 | 烘焙进 SVG 的强度；soft-light 下暖/冷/墨三种底都清晰可辨 |
+| `feComponentTransfer` | RGB slope 1.6 / intercept −0.3；A slope 4 | 关键步骤：增强噪点对比度（soft-light 效果随偏离中灰的程度放大）；alpha 二值化消除低频云斑，只留高频颗粒 |
 | 混合模式 | `soft-light` | 普通混合在亮带上要么不可见（≤0.07）、要么像白灰（≥0.1）；soft-light 按底色明暗双向调制，任何带上都自然 |
 | tile 尺寸 | 256px | 重复不可见 |
 | 动画 | 无 | 静态纹理，天然兼容 `prefers-reduced-motion` |
@@ -147,6 +147,7 @@ band 背景层之上，因此 bento 里的照片不受颗粒影响。tile 由 to
 | 2026-07-19 | band CSS 渐变 | 尝试后回退（与 GlyphMatrix 过渡冲突，见 §4） |
 | 2026-07-19 | 颗粒纹理精修 | 彩色噪点 0.035 → 中性细颗粒 0.04 |
 | 2026-07-20 | 颗粒改 band 级背景 | 全页覆盖层（照片双重加粒）→ band 背景 + soft-light（照片纯净） |
+| 2026-07-21 | 颗粒增强 | 对齐 contralabs 质感：0.78 频率 + feComponentTransfer 对比度增强/alpha 二值化（消除云斑） |
 
 ## 8. 新增颜色的流程
 

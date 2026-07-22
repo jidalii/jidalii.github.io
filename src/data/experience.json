@@ -13,15 +13,18 @@
         "Rust",
         "C++",
         "Python",
-        "Solana",
+        "Solidity",
         "EVM",
+        "Solana",
         "gRPC"
       ],
       "highlights": [
-        "Built production MPC signing infrastructure for Solana Ed25519 and EVM secp256k1",
-        "Developed REST/gRPC trading infrastructure across 10+ DeFi venues",
-        "Maintained Hyperliquid nodes with feed relay and NGINX auto-failover",
-        "Built CME market-data relay reducing downstream latency by 10ms"
+        "Built production MPC signing infrastructure for Solana Ed25519 and EVM secp256k1.",
+        "Developed REST/gRPC trading infrastructure across 10+ DeFi venues.",
+        "Maintained Hyperliquid nodes with feed relay and NGINX auto-failover.",
+        "Built CME market-data relay reducing downstream latency by 10ms.",
+        "Researched onchain arbitration strategies.",
+        ""
       ]
     },
     {
